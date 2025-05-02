@@ -1,11 +1,11 @@
 import { PrismaClient } from "@prisma/client";
 
-const authMiddleware = require('../middleware');
-const zod = require('zod');
-const jwt = require('jsonwebtoken');
-const express = require('express');
+import authMiddleware from "../middleware";
+import zod from "zod";
+import jwt from "jsonwebtoken";
+import express from "express";
 
-const router = express.router();
+const router = express.Router();
 const client = new PrismaClient();
 
 router.use(express.json());
@@ -49,8 +49,9 @@ router.post('/signup', async (req: any, res: any) => {
     });
 
     const userId = user.id;
+    const JWT_SECRET = process.env.JWT_SECRET;
 
-    const token = jwt.sign({ userId }, process.env.JWT_SECRET);
+    const token = jwt.sign({ userId }, JWT_SECRET || "");
     res.cookie('token', token, {
         httpOnly: true,
         maxAge: 60 * 60 * 24 * 7
@@ -91,7 +92,9 @@ router.post('/signin', async (req: any, res: any) => {
         return;
     }
 
-    const token = jwt.sign({ username: userDetails.username }, process.env.JWT_SECRET);
+    const JWT_SECRET = process.env.JWT_SECRET;
+
+    const token = jwt.sign({ username: userDetails.username }, JWT_SECRET || "");
     res.cookie('token', token, {
         httpOnly: true,
         maxAge: 60 * 60 * 24 * 7 // 1 week
@@ -150,3 +153,4 @@ router.post('/createtodo', authMiddleware, async (req: any, res: any) => {
 });
 
 
+export default router;

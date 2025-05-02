@@ -8,18 +8,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { PrismaClient } from "@prisma/client";
-const authMiddleware = require('../middleware');
-const zod = require('zod');
-const jwt = require('jsonwebtoken');
-const express = require('express');
-const router = express.router();
+import authMiddleware from "../middleware.js";
+import zod from "zod";
+import jwt from "jsonwebtoken";
+import express from "express";
+const router = express.Router();
 const client = new PrismaClient();
 router.use(express.json());
 const userSchema = zod.object({
     username: zod.string(),
     password: zod.string(),
     firstName: zod.string(),
-    lastname: zod.string()
+    lastName: zod.string()
 });
 router.post('/signup', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const userDetails = req.body;
@@ -47,11 +47,12 @@ router.post('/signup', (req, res) => __awaiter(void 0, void 0, void 0, function*
             username: userDetails.username,
             password: userDetails.password,
             firstName: userDetails.firstName,
-            lastName: userDetails.lastname
+            lastName: userDetails.lastName
         }
     });
     const userId = user.id;
-    const token = jwt.sign({ userId }, process.env.JWT_SECRET);
+    const JWT_SECRET = process.env.JWT_SECRET;
+    const token = jwt.sign({ userId }, JWT_SECRET || "");
     res.cookie('token', token, {
         httpOnly: true,
         maxAge: 60 * 60 * 24 * 7
@@ -63,7 +64,10 @@ router.post('/signup', (req, res) => __awaiter(void 0, void 0, void 0, function*
 }));
 router.post('/signin', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const userDetails = req.body;
-    const { success, error } = userSchema.safeParse(userDetails);
+    const { success, error } = zod.object({
+        username: zod.string(),
+        password: zod.string()
+    }).safeParse(userDetails);
     if (error) {
         res.status(400).json({
             message: 'Invalid user details',
@@ -88,7 +92,8 @@ router.post('/signin', (req, res) => __awaiter(void 0, void 0, void 0, function*
         });
         return;
     }
-    const token = jwt.sign({ username: userDetails.username }, process.env.JWT_SECRET);
+    const JWT_SECRET = process.env.JWT_SECRET;
+    const token = jwt.sign({ username: userDetails.username }, JWT_SECRET || "");
     res.cookie('token', token, {
         httpOnly: true,
         maxAge: 60 * 60 * 24 * 7 // 1 week
@@ -138,3 +143,4 @@ router.post('/createtodo', authMiddleware, (req, res) => __awaiter(void 0, void 
         todo: todo
     });
 }));
+export default router;

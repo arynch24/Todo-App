@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
-import authMiddleware from "../middleware";
+import authMiddleware from "../middleware.js";
 import zod from "zod";
 import jwt from "jsonwebtoken";
 import express from "express";
@@ -14,7 +14,7 @@ const userSchema = zod.object({
     username: zod.string(),
     password: zod.string(),
     firstName: zod.string(),
-    lastname: zod.string()
+    lastName: zod.string()
 })
 
 router.post('/signup', async (req: any, res: any) => {
@@ -44,7 +44,7 @@ router.post('/signup', async (req: any, res: any) => {
             username: userDetails.username,
             password: userDetails.password,
             firstName: userDetails.firstName,
-            lastName: userDetails.lastname
+            lastName: userDetails.lastName
         }
     });
 
@@ -65,7 +65,10 @@ router.post('/signup', async (req: any, res: any) => {
 
 router.post('/signin', async (req: any, res: any) => {
     const userDetails = req.body
-    const { success, error } = userSchema.safeParse(userDetails);
+    const { success, error } = zod.object({
+        username: zod.string(),
+        password: zod.string()
+    }).safeParse(userDetails);
     if (error) {
         res.status(400).json({
             message: 'Invalid user details',
@@ -123,8 +126,8 @@ router.get('/todos', authMiddleware, async (req: any, res: any) => {
     });
 
     res.status(200).json({
-        message:"Todos Fetched",
-        todos:todos
+        message: "Todos Fetched",
+        todos: todos
     });
 });
 
@@ -148,7 +151,7 @@ router.post('/createtodo', authMiddleware, async (req: any, res: any) => {
 
     res.status(200).json({
         message: 'Todo created successfully',
-        todo:todo
+        todo: todo
     });
 });
 

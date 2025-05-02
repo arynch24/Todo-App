@@ -78,7 +78,8 @@ router.post('/signin', async (req: any, res: any) => {
     }
     const existingUser = await client.user.findUnique({
         where: {
-            username: userDetails.username
+            username: userDetails.username,
+            password: userDetails.password
         }
     })
     if (!existingUser) {
@@ -96,8 +97,9 @@ router.post('/signin', async (req: any, res: any) => {
     }
 
     const JWT_SECRET = process.env.JWT_SECRET;
+    const userId = existingUser.id;
 
-    const token = jwt.sign({ username: userDetails.username }, JWT_SECRET || "");
+    const token = jwt.sign({ userId }, JWT_SECRET || "");
     res.cookie('token', token, {
         httpOnly: true,
         maxAge: 60 * 60 * 24 * 7 // 1 week
@@ -141,6 +143,7 @@ router.post('/createtodo', authMiddleware, async (req: any, res: any) => {
         })
         return;
     }
+
     const todo = await client.todo.create({
         data: {
             userId,

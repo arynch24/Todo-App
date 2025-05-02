@@ -77,7 +77,8 @@ router.post('/signin', (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
     const existingUser = yield client.user.findUnique({
         where: {
-            username: userDetails.username
+            username: userDetails.username,
+            password: userDetails.password
         }
     });
     if (!existingUser) {
@@ -93,7 +94,8 @@ router.post('/signin', (req, res) => __awaiter(void 0, void 0, void 0, function*
         return;
     }
     const JWT_SECRET = process.env.JWT_SECRET;
-    const token = jwt.sign({ username: userDetails.username }, JWT_SECRET || "");
+    const userId = existingUser.id;
+    const token = jwt.sign({ userId }, JWT_SECRET || "");
     res.cookie('token', token, {
         httpOnly: true,
         maxAge: 60 * 60 * 24 * 7 // 1 week

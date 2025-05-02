@@ -24,7 +24,6 @@ function createUser(username, password, firstName, lastName) {
         console.log(user);
     });
 }
-// createUser("arynch24","jknnfsf242","Aryan","Chahan");
 function createTodo(userId, title, description) {
     return __awaiter(this, void 0, void 0, function* () {
         const todo = yield client.todo.create({
@@ -37,7 +36,6 @@ function createTodo(userId, title, description) {
         console.log(todo);
     });
 }
-createTodo(1, "go to toilet", "go to gym and do 100 pushups");
 function getTodos(userId) {
     return __awaiter(this, void 0, void 0, function* () {
         const todos = yield client.todo.findMany({

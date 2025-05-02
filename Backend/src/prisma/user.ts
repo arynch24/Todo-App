@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import { get } from "http";
 
 const client = new PrismaClient();
 
@@ -14,7 +13,6 @@ async function createUser(username: string, password: string, firstName: string,
     });
     console.log(user);
 }
-// createUser("arynch24","jknnfsf242","Aryan","Chahan");
 
 async function createTodo(userId: number, title: string, description: string) {
     const todo = await client.todo.create({
@@ -26,9 +24,6 @@ async function createTodo(userId: number, title: string, description: string) {
     });
     console.log(todo);
 }
-createTodo(1, "go to toilet", "go to gym and do 100 pushups");
-
-
 
 async function getTodos(userId: number) {
     const todos = await client.todo.findMany({

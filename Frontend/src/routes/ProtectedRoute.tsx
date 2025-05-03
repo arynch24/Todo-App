@@ -1,22 +1,20 @@
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { useEffect } from "react";
 
-const ProtectedRoute = ({ children }:any) => {
+const ProtectedRoute = ({ children }: any) => {
   const navigate = useNavigate();
-  const [checkingAuth, setCheckingAuth] = useState(true);
+  const token = Cookies.get("token");
 
   useEffect(() => {
-    const token = Cookies.get("token");
-
-    if (!token) {
-      navigate("/signin", { replace: true });
-    } else {
-      setCheckingAuth(false);
+    const checkToken = () => {
+      if (!token) {
+        navigate("/signin");
+      }
     }
-  }, [navigate]);
-
-  if (checkingAuth) return null;
+    checkToken();
+  }
+    , [token, navigate]);
 
   return children;
 };

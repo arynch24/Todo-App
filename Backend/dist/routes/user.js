@@ -54,7 +54,7 @@ router.post('/signup', (req, res) => __awaiter(void 0, void 0, void 0, function*
     const JWT_SECRET = process.env.JWT_SECRET;
     const token = jwt.sign({ userId }, JWT_SECRET || "");
     res.cookie('token', token, {
-        httpOnly: true,
+        samesite: 'lax',
         maxAge: 60 * 60 * 24 * 7
     });
     res.status(200).json({
@@ -97,7 +97,7 @@ router.post('/signin', (req, res) => __awaiter(void 0, void 0, void 0, function*
     const userId = existingUser.id;
     const token = jwt.sign({ userId }, JWT_SECRET || "");
     res.cookie('token', token, {
-        httpOnly: true,
+        samesite: 'lax',
         maxAge: 60 * 60 * 24 * 7 // 1 week
     });
     res.status(200).json({

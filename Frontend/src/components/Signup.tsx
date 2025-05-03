@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import Cookies from 'js-cookie';
 
 const SignUp = () => {
 
@@ -33,9 +32,9 @@ const SignUp = () => {
                 alert("SignUp Successful");
                 navigate("/dashboard");
             }
-        } catch (err) {
+        } catch (err:any) {
             console.error(err);
-            // alert(res.json().message);
+            alert("SignUp Failed!" );
         }
     };
 

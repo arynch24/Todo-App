@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import Cookies from 'js-cookie';
 
 const SignIn = () => {
 
@@ -26,12 +25,8 @@ const SignIn = () => {
             console.log(res.data);
 
             if (res.status === 200) {
-                alert("SignIn Successful");
-                Cookies.set("token", res.data.token, {
-                    expires: 7,
-                    sameSite: 'Lax',
-                });
                 navigate("/dashboard", { replace: true });
+                alert("SignIn Successful");
             }
         } catch (err) {
             console.error(err);

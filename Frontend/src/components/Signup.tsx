@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const SignUp = () => {
 
@@ -22,11 +23,9 @@ const SignUp = () => {
                 firstName,
                 lastName,
                 password
-            }, {
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            });
+            },{
+                withCredentials: true, // 👈 REQUIRED for cookies to be sent!
+              });
 
             console.log(res.data);
 

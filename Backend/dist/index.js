@@ -3,8 +3,8 @@ import rootRouter from './routes/index.js';
 import cors from 'cors';
 const app = express();
 app.use(cors({
-    origin: '*',
-    credentials: true,
+    origin: "http://localhost:5173", // frontend origin
+    credentials: true, // 👈 this is important
 }));
 //if the request comes to /api go to rootrouter
 app.use('/api', rootRouter);

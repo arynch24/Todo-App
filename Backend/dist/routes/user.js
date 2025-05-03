@@ -125,19 +125,21 @@ router.get('/todos', authMiddleware, (req, res) => __awaiter(void 0, void 0, voi
 }));
 router.post('/createtodo', authMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const body = req.body;
-    const { title, description } = body;
+    const { title, description, createdAt } = body;
     const userId = req.userId;
-    if (!title || !description) {
+    if (!title || !description || !createdAt) {
         res.status(400).json({
             message: 'Invalid todo details'
         });
         return;
     }
+    const parsedDate = new Date(createdAt || Date.now());
     const todo = yield client.todo.create({
         data: {
             userId,
             title,
-            description
+            description,
+            createdAt: parsedDate
         }
     });
     res.status(200).json({

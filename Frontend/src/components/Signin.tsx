@@ -20,17 +20,18 @@ const SignIn = () => {
                 username,
                 password
             }, {
-                headers: {
-                    "Content-Type": "application/json"
-                }
+                withCredentials: true, // 👈 REQUIRED for cookies to be sent!
             });
 
             console.log(res.data);
 
             if (res.status === 200) {
                 alert("SignIn Successful");
-                Cookies.set("token", res.data.token, { expires: 7 });
-                navigate("/dashboard",{ replace: true });
+                Cookies.set("token", res.data.token, {
+                    expires: 7,
+                    sameSite: 'Lax',
+                });
+                navigate("/dashboard", { replace: true });
             }
         } catch (err) {
             console.error(err);

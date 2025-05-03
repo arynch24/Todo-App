@@ -135,20 +135,23 @@ router.get('/todos', authMiddleware, async (req: any, res: any) => {
 
 router.post('/createtodo', authMiddleware, async (req: any, res: any) => {
     const body = req.body;
-    const { title, description } = body;
+    const { title, description, createdAt } = body;
     const userId = req.userId;
-    if (!title || !description) {
+    if (!title || !description || !createdAt) {
         res.status(400).json({
             message: 'Invalid todo details'
         })
         return;
     }
 
+    const parsedDate: Date = new Date(createdAt || Date.now());
+
     const todo = await client.todo.create({
         data: {
             userId,
             title,
-            description
+            description,
+            createdAt: parsedDate
         }
     });
 

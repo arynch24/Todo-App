@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const SignIn = () => {
 
@@ -28,11 +29,12 @@ const SignIn = () => {
 
             if (res.status === 200) {
                 alert("SignIn Successful");
-                navigate("/dashboard");
+                Cookies.set("token", res.data.token, { expires: 7 });
+                navigate("/dashboard",{ replace: true });
             }
         } catch (err) {
             console.error(err);
-            // alert(res.json().message);
+            alert("Sign-in failed. Check credentials.");
         }
     };
 
@@ -62,7 +64,7 @@ const SignIn = () => {
                         />
                         <div onClick={handleSignInButton}>
                             <button className="w-full bg-coral text-white px-4 py-2 rounded-md">
-                                Sign Up
+                                Sign In
                             </button>
                         </div>
 

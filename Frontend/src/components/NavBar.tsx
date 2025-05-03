@@ -4,11 +4,10 @@ const NavBar = () => {
   const navigate = useNavigate()
 
   return (
-    <div className="w-full h-14 flex justify-between items-center border-b-[0.5px] border-gray-300 px-10">
-      <h1 className="text-2xl">Todo App</h1>
+    <div className="w-full h-16 flex justify-between items-center border-b-[0.5px] border-gray-300 px-28">
+      <div><img src="https://routine.co/_nuxt/logo.qmXltfCZ.svg" className="h-28 w-32" onClick={()=>navigate('/')}/></div>
       <div>
-        <button className="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded" onClick={() => navigate('/signin')}>Signin</button>
-        <button className="bg-blue-700  hover:bg-blue-800 text-white px-4 py-2 rounded ml-2" onClick={() => navigate('/signup')}>SignUp</button>
+        <button className="text-coral bg-[#FBEFEE] text-md font-semibold mr-8 px-3 py-2 rounded-md" onClick={() => navigate('/signup')}>Get Started</button>
       </div>
     </div>
   )

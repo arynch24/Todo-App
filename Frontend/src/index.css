@@ -1,6 +1,15 @@
 @import "tailwindcss";
 
-body{
-    background-color: #18181b;
-    color: azure;
-}
+:root {
+    --coral: #f96359;
+  }
+  
+  @layer utilities {
+    .bg-coral {
+      background-color: var(--coral);
+    }
+  
+    .text-coral {
+      color: var(--coral);
+    }
+  }

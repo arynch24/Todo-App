@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import axios from 'axios';
+import TodoLoader from '../components/Loader';
 
 const Dashboard = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [createTodo, setCreateTodo] = useState("");
   const [todos, setTodos] = useState([]);
   const [refreshTodo, setRefreshTodo] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleDateChange = (direction: 'left' | 'right') => {
     const newDate = new Date(selectedDate);
@@ -71,8 +73,10 @@ const Dashboard = () => {
 
 
   useEffect(() => {
+
     const fetchTodos = async () => {
       try {
+        setIsLoading(true);
         const res = await axios.get(`http://localhost:3000/api/user/todos?date=${selectedDate.toISOString()}`, {
           withCredentials: true, // 👈 REQUIRED for cookies to be sent!
         });
@@ -80,6 +84,9 @@ const Dashboard = () => {
         console.log(res.data);
       } catch (err) {
         console.error(err);
+      }
+      finally {
+        setIsLoading(false);
       }
     };
 
@@ -108,30 +115,36 @@ const Dashboard = () => {
           onClick={() => handleDateChange('right')}
         />
       </div>
-      <div className='w-lg min-w-md'>
-        {/* add tasks */}
-        <div className='flex gap-3 hover:bg-zinc-100 px-5 py-3 mt-6 rounded-sm'>
-          <input type='checkbox' className='w-4 h-5' />
-          <input type='text' placeholder='Add task' className='placeholder-zinc-400 focus:outline-none text-sm text-zinc-600 w-full'
-            onChange={(e) => setCreateTodo(e.target.value)}
-            value={createTodo}
-            autoFocus={true}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                // Handle creating a new todo
-                handleCreateTodo();
+
+      {/* loading */}
+      {isLoading ?
+        <TodoLoader /> :
+        <div className='w-lg min-w-md'>
+
+          {/* add tasks */}
+          <div className='flex gap-3 hover:bg-zinc-100 px-5 py-3 mt-6 rounded-sm'>
+            <input type='checkbox' className='w-4 h-5' />
+            <input type='text' placeholder='Add task' className='placeholder-zinc-400 focus:outline-none text-sm text-zinc-600 w-full'
+              onChange={(e) => setCreateTodo(e.target.value)}
+              value={createTodo}
+              autoFocus={true}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  // Handle creating a new todo
+                  handleCreateTodo();
+                }
               }
-            }
-            }
-          />
-        </div>
-        {/* tasks to do */}
-        <div>
-          {todoNotDone.map((todo: any) => (
-            <div
-              key={todo.id}
-              className="flex gap-3 hover:border hover:border-zinc-300 px-5 py-3 rounded-sm"
-            >
+              }
+            />
+          </div>
+
+          {/* tasks to do */}
+          <div>
+            {todoNotDone.map((todo: any) => (
+              <div
+                key={todo.id}
+                className="flex gap-3 hover:border hover:border-zinc-300 px-5 py-3 rounded-sm"
+              >
                 <input
                   type="checkbox"
                   data-id={todo.id}
@@ -139,30 +152,30 @@ const Dashboard = () => {
                   onChange={handleChange}
                   checked={todo.done}
                 />
-              <div className="text-sm text-zinc-700">{todo.title}</div>
-            </div>
-          ))}
-        </div>
+                <div className="text-sm text-zinc-700">{todo.title}</div>
+              </div>
+            ))}
+          </div>
 
+          <hr className='text-gray-200 my-4' />
 
-        <hr className='text-gray-200 my-4' />
-
-        {/* tasks pending */}
-        <div>
-          {todoDone.map((todo: any) => (
-            <div key={todo.id} className='flex gap-3 hover:border-1 hover:border-zinc-300 px-5 py-3 rounded-sm'>
+          {/* tasks pending */}
+          <div>
+            {todoDone.map((todo: any) => (
+              <div key={todo.id} className='flex gap-3 hover:border-1 hover:border-zinc-300 px-5 py-3 rounded-sm'>
                 <input
                   type="checkbox"
                   data-id={todo.id}
                   className="w-4 h-5"
                   onChange={handleChange}
                   checked={todo.done}
-                  />
-              <div className='text-sm text-zinc-400'>{todo.title}</div>
-            </div>
-          ))}
+                />
+                <div className='text-sm text-zinc-400'>{todo.title}</div>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      }
     </div>
   );
 };

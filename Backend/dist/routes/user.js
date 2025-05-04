@@ -7,6 +7,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 import { PrismaClient } from "@prisma/client";
 import authMiddleware from "../middleware.js";
 import zod from "zod";
@@ -98,7 +109,7 @@ router.post('/signin', (req, res) => __awaiter(void 0, void 0, void 0, function*
     const token = jwt.sign({ userId }, JWT_SECRET || "");
     res.cookie('token', token, {
         samesite: 'lax',
-        maxAge: 60 * 60 * 24 * 7 // 1 week
+        expires: new Date(Date.now() + 60 * 60 * 1000 * 24 * 7),
     });
     res.status(200).json({
         message: 'User signed in successfully',
@@ -146,5 +157,23 @@ router.post('/createtodo', authMiddleware, (req, res) => __awaiter(void 0, void 
         message: 'Todo created successfully',
         todo: todo
     });
+}));
+router.post('/updatetodo', authMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const _a = req.body, { id } = _a, updates = __rest(_a, ["id"]);
+    const userId = req.userId;
+    if (!id) {
+        return res.status(400).json({ message: 'Todo ID is required' });
+    }
+    try {
+        const todo = yield client.todo.update({
+            where: { id, userId },
+            data: updates,
+        });
+        res.status(200).json({ message: 'Todo updated successfully', todo });
+    }
+    catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Error updating todo' });
+    }
 }));
 export default router;

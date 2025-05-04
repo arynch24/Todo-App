@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import axios from 'axios';
 
 const Dashboard = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [createTodo, setCreateTodo] = useState("");
+  const [todos, setTodos] = useState([]);
+  const [refreshTodo, setRefreshTodo] = useState(0);
 
   const handleDateChange = (direction: 'left' | 'right') => {
     const newDate = new Date(selectedDate);
@@ -35,6 +37,71 @@ const Dashboard = () => {
     setCreateTodo("");
   }
 
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const todoId = parseInt(e.target.dataset.id || "");
+    const isChecked = e.target.checked;
+
+    if (!todoId) {
+      console.error("Missing todo ID");
+      return;
+    }
+
+    try {
+      const res = await axios.post(
+        "http://localhost:3000/api/user/updatetodo",
+        {
+          id: todoId,
+          done: isChecked,
+          createdAt: selectedDate.toISOString()
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      setRefreshTodo((prev: number) => prev + 1);
+      console.log("Update successful:", res.data);
+
+    } catch (error) {
+      console.error("Error updating todo:", error);
+    }
+
+    console.log("Checkbox checked:", isChecked);
+  };
+
+
+  useEffect(() => {
+    const fetchTodos = async () => {
+      try {
+        const res = await axios.get("http://localhost:3000/api/user/todos", {
+          withCredentials: true, // 👈 REQUIRED for cookies to be sent!
+        });
+        setTodos(res.data.todos);
+        console.log(res.data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchTodos();
+  }, [selectedDate, createTodo, refreshTodo]);
+
+  const todoNotDone = todos.filter((todo: any) => todo.done === false);
+  const todoDone = todos.filter((todo: any) => todo.done === true);
+
+  // useEffect(() => {
+  //   const todosDone = todos.filter((todo: any) => {
+  //     const todoDate = new Date(todo.createdAt);
+  //     return (
+  //       todoDate.getDate() === selectedDate.getDate() &&
+  //       todoDate.getMonth() === selectedDate.getMonth() &&
+  //       todoDate.getFullYear() === selectedDate.getFullYear()
+  //     );
+  //   });
+  // }, []);
+
+
+
   return (
     <div className='ml-24 mt-16'>
       <div className='inline-block hover:bg-gray-100 hover:rounded-md px-4 py-2 mb-4'>
@@ -54,11 +121,11 @@ const Dashboard = () => {
           onClick={() => handleDateChange('right')}
         />
       </div>
-      <div>
+      <div className='w-lg min-w-md'>
         {/* add tasks */}
-        <div className='flex gap-3 bg-zinc-100 px-5 py-3 mt-6 rounded-sm'>
+        <div className='flex gap-3 hover:bg-zinc-100 px-5 py-3 mt-6 rounded-sm'>
           <input type='checkbox' className='' />
-          <input type='text' placeholder='Add task' className='placeholder-zinc-400 focus:outline-none text-sm text-zinc-600'
+          <input type='text' placeholder='Add task' className='placeholder-zinc-400 focus:outline-none text-sm text-zinc-600 w-full'
             onChange={(e) => setCreateTodo(e.target.value)}
             value={createTodo}
             autoFocus={true}
@@ -66,7 +133,6 @@ const Dashboard = () => {
               if (e.key === 'Enter') {
                 // Handle creating a new todo
                 handleCreateTodo();
-
               }
             }
             }
@@ -74,14 +140,67 @@ const Dashboard = () => {
         </div>
         {/* tasks to do */}
         <div>
-
+          {todoNotDone.map((todo: any) => (
+            <div
+              key={todo.id}
+              className="flex gap-3 hover:border hover:border-zinc-300 px-5 py-3 rounded-sm"
+            >
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={todo.done}
+                  data-id={todo.id}
+                  className="peer hidden"
+                  onChange={handleChange}
+                />
+                <div className="w-5 h-5 rounded border border-gray-400 peer-checked:bg-blue-600 peer-checked:border-blue-600 flex items-center justify-center transition">
+                  <svg
+                    className="w-3 h-3 text-white hidden peer-checked:block"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+              </label>
+              <div className="text-sm text-zinc-700">{todo.title}</div>
+            </div>
+          ))}
         </div>
+
 
         <hr className='text-gray-200 my-4' />
 
         {/* tasks pending */}
         <div>
-
+          {todoDone.map((todo: any) => (
+            <div key={todo.id} className='flex gap-3 hover:border-1 hover:border-zinc-300 px-5 py-3 rounded-sm'>
+              <input type='checkbox' checked={todo.done} data-id={todo.id} className="peer hidden" onChange={handleChange} />
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={todo.done}
+                  data-id={todo.id}
+                  className="peer hidden"
+                  onChange={handleChange}
+                />
+                <div className="w-5 h-5 rounded border border-gray-400 peer-checked:bg-blue-600 peer-checked:border-blue-600 flex items-center justify-center transition">
+                  <svg
+                    className="w-3 h-3 text-white hidden peer-checked:block"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+              </label>
+              <div className='text-sm text-zinc-400'>{todo.title}</div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

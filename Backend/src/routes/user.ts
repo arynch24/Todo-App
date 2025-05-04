@@ -102,7 +102,7 @@ router.post('/signin', async (req: any, res: any) => {
     const token = jwt.sign({ userId }, JWT_SECRET || "");
     res.cookie('token', token, {
         samesite: 'lax',
-        maxAge: 60 * 60 * 24 * 7 // 1 week
+        expires: new Date(Date.now() + 60 * 60 * 1000 * 24 * 7),
     });
 
     res.status(200).json({
@@ -159,6 +159,27 @@ router.post('/createtodo', authMiddleware, async (req: any, res: any) => {
         message: 'Todo created successfully',
         todo: todo
     });
+});
+
+router.post('/updatetodo', authMiddleware, async (req: any, res: any) => {
+    const { id, ...updates } = req.body;
+    const userId = req.userId;
+
+    if (!id) {
+        return res.status(400).json({ message: 'Todo ID is required' });
+    }
+
+    try {
+        const todo = await client.todo.update({
+            where: { id, userId },
+            data: updates,
+        });
+
+        res.status(200).json({ message: 'Todo updated successfully', todo });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Error updating todo' });
+    }
 });
 
 

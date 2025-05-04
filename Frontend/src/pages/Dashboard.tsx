@@ -9,49 +9,12 @@ const Dashboard = () => {
   const [todos, setTodos] = useState([]);
   const [refreshTodo, setRefreshTodo] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const [editingTodoId, setEditingTodoId] = useState(null); // Track which todo is being edited
+  const [editingTodoId, setEditingTodoId] = useState(null);
   const [tempTitle, setTempTitle] = useState("");
 
-  const handleTitleSave = async (todoId: number) => {
-    if (!todoId) return;
 
-    try {
-      // API call to update the todo title
-      const res = await axios.post(
-        "http://localhost:3000/api/user/updatetodo",
-        {
-          id: todoId,
-          title: tempTitle,
-          createdAt: selectedDate.toISOString()
-        },
-        {
-          withCredentials: true,
-        }
-      );
-
-      // Refresh todos after update
-      setRefreshTodo(prev => prev + 1);
-      console.log("Title update successful:", res.data);
-    } catch (error) {
-      console.error("Error updating todo title:", error);
-    }
-
-    // Exit edit mode
-    setEditingTodoId(null);
-    setTempTitle("");
-  };
-
-  const startEditing = (todo: { id: any, title: string }) => {
-    setEditingTodoId(todo.id);
-    setTempTitle(todo.title);
-  };
-
-  const cancelEditing = () => {
-    setEditingTodoId(null);
-    setTempTitle("");
-  };
-
-  const handleDateChange = (direction: 'left' | 'right') => {
+  // Handle date change for the calendar
+  const handleDateChange = (direction: string) => {
     const newDate = new Date(selectedDate);
     newDate.setDate(newDate.getDate() + (direction === 'left' ? -1 : 1));
     setSelectedDate(newDate);
@@ -61,29 +24,29 @@ const Dashboard = () => {
   const month = selectedDate.toLocaleString('en-US', { month: 'long' });
   const date = selectedDate.getDate();
 
+  // Create todo function
   const handleCreateTodo = async () => {
-    console.log(selectedDate.toISOString());
-    // selectedDate.setHours(10, 30, 0, 0);
+    if (!createTodo.trim()) return;
 
-    const res = await axios.post("http://localhost:3000/api/user/createtodo", {
-      title: createTodo,
-      description: "",
-      createdAt: selectedDate.toISOString()
-    }, {
-      withCredentials: true, // 👈 REQUIRED for cookies to be sent!
-    });
+    try {
+      const res = await axios.post("http://localhost:3000/api/user/createtodo", {
+        title: createTodo,
+        description: "dd",
+        createdAt: selectedDate.toISOString()
+      }, {
+        withCredentials: true,
+      });
 
-    console.log(res.data);
-    console.log("Todo Created: ", createTodo);
+      console.log("Todo Created:", res.data);
+      setRefreshTodo(prev => prev + 1);
+      setCreateTodo("");
+    } catch (error) {
+      console.error("Error creating todo:", error);
+    }
+  };
 
-    setRefreshTodo((prev: number) => prev + 1);
-    setCreateTodo("");
-  }
-
-  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const todoId = parseInt(e.target.dataset.id || "");
-    const isChecked = e.target.checked;
-
+  // Update todo function to handle both title and status updates
+  const updateTodo = async (todoId: number, updateData: object) => {
     if (!todoId) {
       console.error("Missing todo ID");
       return;
@@ -94,7 +57,7 @@ const Dashboard = () => {
         "http://localhost:3000/api/user/updatetodo",
         {
           id: todoId,
-          done: isChecked,
+          ...updateData,
           createdAt: selectedDate.toISOString()
         },
         {
@@ -102,31 +65,59 @@ const Dashboard = () => {
         }
       );
 
-      setRefreshTodo((prev: number) => prev + 1);
+      setRefreshTodo(prev => prev + 1);
       console.log("Update successful:", res.data);
-
+      return res.data;
     } catch (error) {
       console.error("Error updating todo:", error);
+      return null;
     }
-
-    console.log("Checkbox checked:", isChecked);
   };
 
+  // Handle checkbox toggle 
+  const handleTodoStatusToggle = async (todoId: number, currentStatus: boolean) => {
+    await updateTodo(todoId, { done: !currentStatus });
+  };
 
+  // Handle todo item interaction - either edit or toggle based on where user clicked
+  const handleTodoInteraction = (todo: { id: any, title: string, done: boolean }, isCheckboxClicked: boolean) => {
+    if (isCheckboxClicked) {
+      // Toggle the todo status
+      handleTodoStatusToggle(todo.id, todo.done);
+    } else {
+      // Start editing the title
+      setEditingTodoId(todo.id);
+      setTempTitle(todo.title);
+    }
+  };
+
+  // Save the edited title
+  const handleTitleSave = async (todoId: number) => {
+    if (!todoId) return;
+    await updateTodo(todoId, { title: tempTitle });
+
+    cancelEditing();
+  };
+
+  // Cancel editing
+  const cancelEditing = () => {
+    setEditingTodoId(null);
+    setTempTitle("");
+  };
+
+  // Fetch todos when the component mounts or when the selected date changes
   useEffect(() => {
-
     const fetchTodos = async () => {
       try {
         setIsLoading(true);
         const res = await axios.get(`http://localhost:3000/api/user/todos?date=${selectedDate.toISOString()}`, {
-          withCredentials: true, // 👈 REQUIRED for cookies to be sent!
+          withCredentials: true,
         });
         setTodos(res.data.todos);
         console.log(res.data);
       } catch (err) {
         console.error(err);
-      }
-      finally {
+      } finally {
         setIsLoading(false);
       }
     };
@@ -134,8 +125,52 @@ const Dashboard = () => {
     fetchTodos();
   }, [selectedDate, refreshTodo]);
 
-  const todoNotDone = todos.filter((todo: any) => todo.done === false);
-  const todoDone = todos.filter((todo: any) => todo.done === true);
+  const todoNotDone = todos.filter((todo: { done: boolean }) => todo.done === false);
+  const todoDone = todos.filter((todo: { done: boolean }) => todo.done === true);
+
+  // Render a single todo item with its checkbox and title
+  const renderTodoItem = (todo: any) => (
+    <div
+      key={todo.id}
+      className="flex gap-3 hover:border hover:border-zinc-300 px-5 py-2 rounded-sm"
+    >
+      <input
+        type="checkbox"
+        checked={todo.done}
+        className={`w-4 h-5 ${!todo.done ? 'border-2 border-red-600 rounded-md checked:bg-blue-600 checked:border-blue-600 focus:ring-2 focus:ring-blue-500' : ''}`}
+        onClick={(e) => {
+          e.stopPropagation();
+          handleTodoInteraction(todo, true);
+        }}
+        readOnly
+      />
+      {editingTodoId === todo.id ? (
+        <input
+          type="text"
+          value={tempTitle}
+          onChange={(e) => setTempTitle(e.target.value)}
+          onBlur={() => handleTitleSave(todo.id)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') handleTitleSave(todo.id);
+            if (e.key === 'Escape') cancelEditing();
+          }}
+          className="text-sm border px-1 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 w-full"
+          autoFocus
+          onClick={(e) => e.stopPropagation()}
+        />
+      ) : (
+        <div
+          className={`text-sm cursor-pointer ${todo.done ? 'line-through text-zinc-400' : 'text-zinc-700'}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleTodoInteraction(todo, false);
+          }}
+        >
+          {todo.title}
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <div className='ml-24 mt-16'>
@@ -158,106 +193,40 @@ const Dashboard = () => {
       </div>
 
       {/* loading */}
-      {isLoading ?
-        <TodoLoader /> :
+      {isLoading ? (
+        <TodoLoader />
+      ) : (
         <div className='w-lg min-w-md'>
-
           {/* add tasks */}
           <div className='flex gap-3 hover:bg-zinc-100 px-5 py-3 mt-6 rounded-sm'>
             <input type='checkbox' className='w-4 h-5' />
-            <input type='text' placeholder='Add task' className='placeholder-zinc-400 focus:outline-none text-sm text-zinc-600 w-full'
+            <input type='text'
+              placeholder='Add task'
+              className='placeholder-zinc-400 focus:outline-none text-sm text-zinc-600 w-full'
               onChange={(e) => setCreateTodo(e.target.value)}
               value={createTodo}
               autoFocus={true}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
-                  // Handle creating a new todo
                   handleCreateTodo();
                 }
-              }
-              }
+              }}
             />
           </div>
 
           {/* tasks to do */}
           <div>
-            {todoNotDone.map((todo: { id: number, done: boolean, title: string }) => (
-              <div
-                key={todo.id}
-                className="flex gap-3 hover:border hover:border-zinc-300 px-5 py-2 rounded-sm"
-              >
-                <input
-                  type="checkbox"
-                  data-id={todo.id}
-                  className="w-4 h-5 border-2 border-red-600 rounded-md checked:bg-blue-600 checked:border-blue-600 focus:ring-2 focus:ring-blue-500"
-                  onChange={handleChange}
-                  checked={todo.done}
-                />
-                {editingTodoId === todo.id ? (
-                  <input
-                    type="text"
-                    value={tempTitle}
-                    onChange={(e) => setTempTitle(e.target.value)}
-                    onBlur={() => handleTitleSave(todo.id)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') handleTitleSave(todo.id);
-                      if (e.key === 'Escape') cancelEditing();
-                    }}
-                    className="text-sm rounded focus:outline-none w-full"
-                    autoFocus
-                  />
-                ) : (
-                  <div
-                    className="text-sm text-zinc-700 cursor-pointer"
-                    onClick={() => startEditing(todo)}
-                  >
-                    {todo.title}
-                  </div>
-                )}
-              </div>
-            ))}
+            {todoNotDone.map(renderTodoItem)}
           </div>
 
           <hr className='text-gray-200 my-4' />
 
           {/* tasks completed */}
           <div>
-            {todoDone.map((todo: { id: number, done: boolean, title: string }) => (
-              <div key={todo.id} className='flex gap-3 hover:border hover:border-zinc-300 px-5 py-2 rounded-sm'>
-                <input
-                  type="checkbox"
-                  data-id={todo.id}
-                  className="w-4 h-5"
-                  onChange={handleChange}
-                  checked={todo.done}
-                />
-                {editingTodoId === todo.id ? (
-                  <input
-                    type="text"
-                    value={tempTitle}
-                    onChange={(e) => setTempTitle(e.target.value)}
-                    onBlur={() => handleTitleSave(todo.id)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') handleTitleSave(todo.id);
-                      if (e.key === 'Escape') cancelEditing();
-                    }}
-                    className="text-sm px-1 rounded focus:outline-none w-full"
-                    autoFocus
-                  />
-                ) : (
-                  <div
-                    className={`text-sm cursor-pointer ${todo.done ? 'line-through text-zinc-400' : ''}`}
-                    onClick={() => startEditing(todo)}
-                  >
-                    {todo.title}
-                  </div>
-                )}
-              </div>
-            ))}
+            {todoDone.map(renderTodoItem)}
           </div>
-
         </div>
-      }
+      )}
     </div>
   );
 };

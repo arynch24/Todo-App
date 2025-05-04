@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import { ChevronLeftIcon, ChevronRightIcon, TrashIcon } from "@heroicons/react/24/outline";
 import axios from 'axios';
 import TodoLoader from '../components/Loader';
 
@@ -128,11 +128,34 @@ const Dashboard = () => {
   const todoNotDone = todos.filter((todo: { done: boolean }) => todo.done === false);
   const todoDone = todos.filter((todo: { done: boolean }) => todo.done === true);
 
+  // Delete todo function
+  const deleteTodo = async (todoId: number) => {
+    if (!todoId) {
+      console.error("Missing todo ID");
+      return;
+    }
+
+    try {
+      const res = await axios.post(
+        "http://localhost:3000/api/user/deletetodo",
+        { id: todoId },
+        {
+          withCredentials: true,
+        }
+      );
+
+      setRefreshTodo(prev => prev + 1);
+      console.log("Todo deleted:", res.data);
+    } catch (error) {
+      console.error("Error deleting todo:", error);
+    }
+  }
+
   // Render a single todo item with its checkbox and title
   const renderTodoItem = (todo: any) => (
     <div
       key={todo.id}
-      className="flex gap-3 hover:border hover:border-zinc-300 px-5 py-2 rounded-sm"
+      className="flex gap-3 hover:border hover:border-zinc-300 px-5 py-2 rounded-sm group"
     >
       <input
         type="checkbox"
@@ -160,13 +183,22 @@ const Dashboard = () => {
         />
       ) : (
         <div
-          className={`text-sm cursor-pointer ${todo.done ? 'line-through text-zinc-400' : 'text-zinc-700'}`}
-          onClick={(e) => {
-            e.stopPropagation();
+          className="w-full text-sm cursor-pointer flex justify-between items-center group"
+          onDoubleClick={(e) => {
+            e.stopPropagation(); 
             handleTodoInteraction(todo, false);
           }}
         >
-          {todo.title}
+          <span className={`${todo.done ? 'line-through text-zinc-400' : 'text-zinc-700'}`}>
+            {todo.title}
+          </span>
+          <TrashIcon
+            className="h-4 w-4 invisible group-hover:visible text-zinc-400 hover:text-red-500 cursor-pointer"
+            onClick={(e) => {
+              e.stopPropagation();
+              deleteTodo(todo.id);
+            }}
+          />
         </div>
       )}
     </div>

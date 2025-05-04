@@ -208,5 +208,25 @@ router.post('/updatetodo', authMiddleware, async (req: any, res: any) => {
     }
 });
 
+router.post('/deletetodo', authMiddleware, async (req: any, res: any) => {
+    const { id } = req.body;
+    const userId = req.userId;
+
+    if (!id) {
+        return res.status(400).json({ message: 'Todo ID is required' });
+    }
+
+    try {
+        await client.todo.delete({
+            where: { id, userId },
+        });
+
+        res.status(200).json({ message: 'Todo deleted successfully' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Error deleting todo' });
+    }
+});
+
 
 export default router;

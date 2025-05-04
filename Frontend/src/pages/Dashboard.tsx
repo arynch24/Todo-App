@@ -32,7 +32,7 @@ const Dashboard = () => {
 
     console.log(res.data);
     console.log("Todo Created: ", createTodo);
-    
+
     setRefreshTodo((prev: number) => prev + 1);
     setCreateTodo("");
   }
@@ -88,19 +88,6 @@ const Dashboard = () => {
 
   const todoNotDone = todos.filter((todo: any) => todo.done === false);
   const todoDone = todos.filter((todo: any) => todo.done === true);
-
-  // useEffect(() => {
-  //   const todosDone = todos.filter((todo: any) => {
-  //     const todoDate = new Date(todo.createdAt);
-  //     return (
-  //       todoDate.getDate() === selectedDate.getDate() &&
-  //       todoDate.getMonth() === selectedDate.getMonth() &&
-  //       todoDate.getFullYear() === selectedDate.getFullYear()
-  //     );
-  //   });
-  // }, []);
-
-
 
   return (
     <div className='ml-24 mt-16'>

@@ -137,7 +137,7 @@ const Dashboard = () => {
       <input
         type="checkbox"
         checked={todo.done}
-        className={`w-4 h-5 ${!todo.done ? 'border-2 border-red-600 rounded-md checked:bg-blue-600 checked:border-blue-600 focus:ring-2 focus:ring-blue-500' : ''}`}
+        className={`w-4 h-5`}
         onClick={(e) => {
           e.stopPropagation();
           handleTodoInteraction(todo, true);
@@ -154,7 +154,7 @@ const Dashboard = () => {
             if (e.key === 'Enter') handleTitleSave(todo.id);
             if (e.key === 'Escape') cancelEditing();
           }}
-          className="text-sm border px-1 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 w-full"
+          className="text-sm focus:outline-none w-full"
           autoFocus
           onClick={(e) => e.stopPropagation()}
         />

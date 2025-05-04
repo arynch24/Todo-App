@@ -124,15 +124,36 @@ router.get('/signout', (req, res) => {
 });
 router.get('/todos', authMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const userId = req.userId;
-    const todos = yield client.todo.findMany({
-        where: {
-            userId: userId
-        }
-    });
-    res.status(200).json({
-        message: "Todos Fetched",
-        todos: todos
-    });
+    let date = req.query.date || "";
+    console.log("Received date:", date);
+    if (!date) {
+        return res.status(400).json({ message: "Date query parameter is required." });
+    }
+    const startDate = new Date(date);
+    const startOfDay = new Date(startDate.setHours(0, 0, 0, 0));
+    const endOfDay = new Date(startDate.setHours(23, 59, 59, 999));
+    console.log("Start of day:", startOfDay);
+    console.log("End of day:", endOfDay);
+    try {
+        const todos = yield client.todo.findMany({
+            where: {
+                userId: userId,
+                createdAt: {
+                    gte: startOfDay,
+                    lte: endOfDay
+                }
+            }
+        });
+        console.log("Fetched todos:", todos);
+        res.status(200).json({
+            message: "Todos fetched successfully",
+            todos: todos
+        });
+    }
+    catch (error) {
+        console.error("Error fetching todos:", error);
+        res.status(500).json({ message: "Error fetching todos." });
+    }
 }));
 router.post('/createtodo', authMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const body = req.body;

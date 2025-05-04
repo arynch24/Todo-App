@@ -31,9 +31,9 @@ const Dashboard = () => {
     });
 
     console.log(res.data);
-
-    // Handle the enter key press
     console.log("Todo Created: ", createTodo);
+    
+    setRefreshTodo((prev: number) => prev + 1);
     setCreateTodo("");
   }
 
@@ -73,7 +73,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchTodos = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/api/user/todos", {
+        const res = await axios.get(`http://localhost:3000/api/user/todos?date=${selectedDate.toISOString()}`, {
           withCredentials: true, // 👈 REQUIRED for cookies to be sent!
         });
         setTodos(res.data.todos);
@@ -84,7 +84,7 @@ const Dashboard = () => {
     };
 
     fetchTodos();
-  }, [selectedDate, createTodo, refreshTodo]);
+  }, [selectedDate, refreshTodo]);
 
   const todoNotDone = todos.filter((todo: any) => todo.done === false);
   const todoDone = todos.filter((todo: any) => todo.done === true);

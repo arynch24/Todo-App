@@ -124,7 +124,7 @@ const Dashboard = () => {
       <div className='w-lg min-w-md'>
         {/* add tasks */}
         <div className='flex gap-3 hover:bg-zinc-100 px-5 py-3 mt-6 rounded-sm'>
-          <input type='checkbox' className='' />
+          <input type='checkbox' className='w-4 h-5' />
           <input type='text' placeholder='Add task' className='placeholder-zinc-400 focus:outline-none text-sm text-zinc-600 w-full'
             onChange={(e) => setCreateTodo(e.target.value)}
             value={createTodo}
@@ -145,26 +145,13 @@ const Dashboard = () => {
               key={todo.id}
               className="flex gap-3 hover:border hover:border-zinc-300 px-5 py-3 rounded-sm"
             >
-              <label className="flex items-center gap-3 cursor-pointer">
                 <input
                   type="checkbox"
-                  checked={todo.done}
                   data-id={todo.id}
-                  className="peer hidden"
+                  className="w-4 h-5 border-2 border-red-600 rounded-md checked:bg-blue-600 checked:border-blue-600 focus:ring-2 focus:ring-blue-500"
                   onChange={handleChange}
+                  checked={todo.done}
                 />
-                <div className="w-5 h-5 rounded border border-gray-400 peer-checked:bg-blue-600 peer-checked:border-blue-600 flex items-center justify-center transition">
-                  <svg
-                    className="w-3 h-3 text-white hidden peer-checked:block"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>
-              </label>
               <div className="text-sm text-zinc-700">{todo.title}</div>
             </div>
           ))}
@@ -177,27 +164,13 @@ const Dashboard = () => {
         <div>
           {todoDone.map((todo: any) => (
             <div key={todo.id} className='flex gap-3 hover:border-1 hover:border-zinc-300 px-5 py-3 rounded-sm'>
-              <input type='checkbox' checked={todo.done} data-id={todo.id} className="peer hidden" onChange={handleChange} />
-              <label className="flex items-center gap-3 cursor-pointer">
                 <input
                   type="checkbox"
-                  checked={todo.done}
                   data-id={todo.id}
-                  className="peer hidden"
+                  className="w-4 h-5"
                   onChange={handleChange}
-                />
-                <div className="w-5 h-5 rounded border border-gray-400 peer-checked:bg-blue-600 peer-checked:border-blue-600 flex items-center justify-center transition">
-                  <svg
-                    className="w-3 h-3 text-white hidden peer-checked:block"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>
-              </label>
+                  checked={todo.done}
+                  />
               <div className='text-sm text-zinc-400'>{todo.title}</div>
             </div>
           ))}

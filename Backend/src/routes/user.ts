@@ -120,10 +120,12 @@ router.get('/signout', (req: any, res: any) => {
 
 router.get('/todos', authMiddleware, async (req: any, res: any) => {
     const userId = req.userId;
+    const { date } = req.query.date || "";
 
     const todos = await client.todo.findMany({
         where: {
-            userId: userId
+            userId: userId,
+            createdAt:date
         }
     });
 

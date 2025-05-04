@@ -143,7 +143,7 @@ const Dashboard = () => {
             {todoNotDone.map((todo: any) => (
               <div
                 key={todo.id}
-                className="flex gap-3 hover:border hover:border-zinc-300 px-5 py-3 rounded-sm"
+                className="flex gap-3 hover:border hover:border-zinc-300 px-5 py-2 rounded-sm"
               >
                 <input
                   type="checkbox"
@@ -162,7 +162,7 @@ const Dashboard = () => {
           {/* tasks pending */}
           <div>
             {todoDone.map((todo: any) => (
-              <div key={todo.id} className='flex gap-3 hover:border-1 hover:border-zinc-300 px-5 py-3 rounded-sm'>
+              <div key={todo.id} className='flex gap-3 hover:border-1 hover:border-zinc-300 px-5 py-2 rounded-sm'>
                 <input
                   type="checkbox"
                   data-id={todo.id}
@@ -170,7 +170,7 @@ const Dashboard = () => {
                   onChange={handleChange}
                   checked={todo.done}
                 />
-                <div className='text-sm text-zinc-400'>{todo.title}</div>
+                <div className='text-sm text-zinc-400 line-through'>{todo.title}</div>
               </div>
             ))}
           </div>

@@ -7,21 +7,21 @@ const NavBar = () => {
 
   return (
     <div className="w-full h-16 flex justify-between items-center border-b-[0.5px] border-gray-300 px-28">
-      <div><img src="https://routine.co/_nuxt/logo.qmXltfCZ.svg" className="h-28 w-32" onClick={() => navigate('/')} /></div>
+      <div className="cursor-pointer"><img src="https://routine.co/_nuxt/logo.qmXltfCZ.svg" className="h-28 w-32" onClick={() => navigate('/')} /></div>
       <div>
         {
-          token ? <button className="text-coral bg-[#FBEFEE] text-md font-semibold mr-2 px-3 py-2 rounded-md" onClick={() => navigate('/dashboard')}>
+          token ? <button className="text-coral bg-[#FBEFEE] text-md font-semibold mr-2 px-3 py-2 rounded-md cursor-pointer hover:bg-[#fddddd] transition-colors" onClick={() => navigate('/dashboard')}>
             Dashboard</button> :
-            <button className="text-coral bg-[#FBEFEE] text-md font-semibold mr-2 px-3 py-2 rounded-md" onClick={() => navigate('/signin')}>
+            <button className="text-coral bg-[#FBEFEE] text-md font-semibold mr-2 px-3 py-2 rounded-md cursor-pointer hover:bg-[#fddddd] transition-colors" onClick={() => navigate('/signin')}>
               Login
             </button>
         }
         {
-          token ? <button className="text-coral bg-[#FBEFEE] text-md font-semibold mr-8 px-3 py-2 rounded-md" onClick={() => {
+          token ? <button className="text-coral bg-[#FBEFEE] text-md font-semibold mr-8 px-3 py-2 rounded-md cursor-pointer hover:bg-[#fddddd] transition-colors" onClick={() => {
             Cookies.remove('token')
             navigate('/')
           }}>Logout</button> :
-            <button className="text-coral bg-[#FBEFEE] text-md font-semibold mr-8 px-3 py-2 rounded-md" onClick={() => navigate('/signup')}>
+            <button className="text-coral bg-[#FBEFEE] text-md font-semibold mr-8 px-3 py-2 rounded-md cursor-pointer hover:bg-[#fddddd] transition-colors" onClick={() => navigate('/signup')}>
               Sign Up
             </button>
         }

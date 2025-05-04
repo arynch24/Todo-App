@@ -54,7 +54,7 @@ router.post('/signup', async (req: any, res: any) => {
     const token = jwt.sign({ userId }, JWT_SECRET || "");
     res.cookie('token', token, {
         samesite: 'lax',
-        maxAge: 60 * 60 * 24 * 7
+        expires: new Date(Date.now() + 60 * 60 * 1000 * 24 * 7),
     });
 
     res.status(200).json({

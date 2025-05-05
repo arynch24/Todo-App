@@ -53,7 +53,7 @@ const SignUp = () => {
 
 
     return (
-        <div className='h-[714px] flex ml-28 items-center gap-64'>
+        <div className='h-[calc(100vh-4rem)] flex justify-center lg:ml-28 items-center gap-60'>
             <div className="w-full max-w-sm ">
                 <h1 className='text-2xl font-semibold  text-zinc-800' >Get Started</h1>
                 <p className='mb-4 text-md text-zinc-700'>Start managing your tasks with routine !</p>
@@ -108,9 +108,11 @@ const SignUp = () => {
                     </div>
                 </div>
             </div>
-            <div className='h-[714px] w-[0.5px] bg-zinc-400'></div>
-            <div className='h-full w-full flex items-end'>
-                <div className='h-12 w-24 ml-10 bg-coral rounded-t-full'></div>
+            <div className='h-full w-[0.5px] bg-zinc-400 hidden lg:block'></div>
+            <div className='h-full w-full hidden lg:block'>
+                <div className='h-full w-full flex items-end '>
+                    <div className='h-12 w-24 ml-10 bg-coral rounded-t-full'></div>
+                </div>
             </div>
         </div>
     )

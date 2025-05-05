@@ -10,8 +10,9 @@ const SignUp = () => {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [password, setPassword] = useState("");
+    const [userExist, setUserExist] = useState("");
     const navigate = useNavigate();
-    const {loading,setLoading} = useContext(LoadingContext);
+    const { loading, setLoading } = useContext(LoadingContext);
 
     const handleSignUpButton = async () => {
         if (!username || !firstName || !lastName || !password) {
@@ -26,25 +27,27 @@ const SignUp = () => {
                 firstName,
                 lastName,
                 password
-            },{
+            }, {
                 withCredentials: true, // 👈 REQUIRED for cookies to be sent!
-              });
+            });
 
             console.log(res.data);
 
             if (res.status === 200) {
                 navigate("/dashboard");
+                setUserExist("");
             }
-        } catch (err:any) {
+
+        } catch (err: any) {
             console.error(err);
-            alert("SignUp Failed!" );
+            setUserExist("User already exists!");
         }
         finally {
             setLoading(false);
         }
     };
 
-    if(loading){
+    if (loading) {
         return <LoginLoader />
     }
 
@@ -74,7 +77,10 @@ const SignUp = () => {
                             onChange={(e) => setLastName(e.target.value)}
 
                         />
-                        <h3 className="font-semibold text-md mb-1 text-left">Email</h3>
+                        <h3 className="font-semibold text-md mb-1 text-left">
+                            Email
+                            <span className='text-red-500 text-sm ml-2 transition-colors'>{userExist}</span>
+                        </h3>
                         <input
                             className="w-full p-2 border border-gray-300 rounded-md text-md mb-4"
                             type="email"

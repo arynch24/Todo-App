@@ -21,7 +21,7 @@ router.post('/signup', async (req: any, res: any) => {
     const userDetails = req.body
     const { success, error } = userSchema.safeParse(userDetails);
     if (error) {
-        res.status(400).json({
+        res.status(401).json({
             message: 'Invalid user details',
             error: error.errors
         })

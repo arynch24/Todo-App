@@ -1,11 +1,14 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+import LoginLoader from './LoginLoader';
+import LoadingContext from '../Context/LoadingContext';
 
 const SignIn = () => {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const {loading, setLoading } = useContext(LoadingContext);
     const navigate = useNavigate();
 
     const handleSignInButton = async () => {
@@ -15,6 +18,7 @@ const SignIn = () => {
         }
 
         try {
+            setLoading(true);
             const res = await axios.post("http://localhost:3000/api/user/signin", {
                 username,
                 password
@@ -26,13 +30,19 @@ const SignIn = () => {
 
             if (res.status === 200) {
                 navigate("/dashboard", { replace: true });
-                alert("SignIn Successful");
             }
         } catch (err) {
             console.error(err);
             alert("Sign-in failed. Check credentials.");
         }
+        finally {
+            setLoading(false);
+        }
     };
+
+    if (loading) {
+        return <LoginLoader />
+    }
 
     return (
         <div className='h-[714px] flex ml-28 items-center gap-64'>

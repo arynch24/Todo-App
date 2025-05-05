@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+import LoadingContext from '../Context/LoadingContext';
+import LoginLoader from './LoginLoader';
 
 const SignUp = () => {
 
@@ -9,6 +11,7 @@ const SignUp = () => {
     const [lastName, setLastName] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
+    const {loading,setLoading} = useContext(LoadingContext);
 
     const handleSignUpButton = async () => {
         if (!username || !firstName || !lastName || !password) {
@@ -17,6 +20,7 @@ const SignUp = () => {
         }
 
         try {
+            setLoading(true);
             const res = await axios.post("http://localhost:3000/api/user/signup", {
                 username,
                 firstName,
@@ -29,14 +33,20 @@ const SignUp = () => {
             console.log(res.data);
 
             if (res.status === 200) {
-                alert("SignUp Successful");
                 navigate("/dashboard");
             }
         } catch (err:any) {
             console.error(err);
             alert("SignUp Failed!" );
         }
+        finally {
+            setLoading(false);
+        }
     };
+
+    if(loading){
+        return <LoginLoader />
+    }
 
 
     return (

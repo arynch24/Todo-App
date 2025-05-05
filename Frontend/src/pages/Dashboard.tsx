@@ -205,7 +205,7 @@ const Dashboard = () => {
   );
 
   return (
-    <div className='ml-24 mt-16'>
+    <div className='w-sm ml-10 mt-8 sm:ml-24 sm:mt-16'>
       <div className='inline-block hover:bg-gray-100 hover:rounded-md px-4 py-2 mb-4'>
         <div className='flex gap-3 mb-1'>
           <div className='text-2xl text-zinc-900'>{day}</div>
@@ -228,7 +228,7 @@ const Dashboard = () => {
       {isLoading ? (
         <TodoLoader />
       ) : (
-        <div className='w-lg min-w-md'>
+        <div className='w-sm sm:w-lg'>
           {/* add tasks */}
           <div className='flex gap-3 hover:bg-zinc-100 px-5 py-3 mt-6 rounded-sm'>
             <input type='checkbox' className='w-4 h-5' />

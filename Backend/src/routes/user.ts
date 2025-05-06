@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Prisma } from "@prisma/client";
 
 import authMiddleware from "../middleware.js";
 import zod from "zod";
@@ -120,7 +120,7 @@ router.get('/signout', (req: any, res: any) => {
 
 router.get('/todos', authMiddleware, async (req: any, res: any) => {
     const userId = req.userId;
-    let date = req.query.date || ""; 
+    let date = req.query.date || "";
     console.log("Received date:", date);
 
     if (!date) {
@@ -140,8 +140,8 @@ router.get('/todos', authMiddleware, async (req: any, res: any) => {
             where: {
                 userId: userId,
                 createdAt: {
-                    gte: startOfDay,  
-                    lte: endOfDay    
+                    gte: startOfDay,
+                    lte: endOfDay
                 }
             }
         });
@@ -170,16 +170,14 @@ router.post('/createtodo', authMiddleware, async (req: any, res: any) => {
         return;
     }
 
-    const parsedDate: Date = new Date(createdAt || Date.now());
+    const data: Prisma.TodoUncheckedCreateInput = {
+        userId,
+        title,
+        description,
+        createdAt: new Date(createdAt)
+    };
 
-    const todo = await client.todo.create({
-        data: {
-            userId,
-            title,
-            description,
-            createdAt: parsedDate
-        }
-    });
+    const todo = await client.todo.create({ data });
 
     res.status(200).json({
         message: 'Todo created successfully',

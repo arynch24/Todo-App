@@ -36,7 +36,7 @@ router.post('/signup', (req, res) => __awaiter(void 0, void 0, void 0, function*
     const userDetails = req.body;
     const { success, error } = userSchema.safeParse(userDetails);
     if (error) {
-        res.status(400).json({
+        res.status(401).json({
             message: 'Invalid user details',
             error: error.errors
         });
@@ -165,7 +165,12 @@ router.post('/createtodo', authMiddleware, (req, res) => __awaiter(void 0, void 
         });
         return;
     }
-    const parsedDate = new Date(createdAt || Date.now());
+    const parsedDate = new Date(createdAt);
+    if (isNaN(parsedDate.getTime())) {
+        return res.status(400).json({
+            message: 'Invalid date format for createdAt'
+        });
+    }
     const todo = yield client.todo.create({
         data: {
             userId,

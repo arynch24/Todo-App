@@ -115,7 +115,11 @@ router.post('/signin', async (req: any, res: any) => {
 });
 
 router.get('/signout', (req: any, res: any) => {
-    res.clearCookie('token');
+    res.clearCookie('token', {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'None',
+      });
     res.status(200).json({
         message: 'User signed out successfully'
     });

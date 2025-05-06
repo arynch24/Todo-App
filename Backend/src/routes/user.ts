@@ -229,5 +229,33 @@ router.post('/deletetodo', authMiddleware, async (req: any, res: any) => {
     }
 });
 
+router.get('/verify', authMiddleware, async (req: any, res: any) => {
+    const userId = req.userId;
+    if (!userId) {
+        res.status(401).json({
+            message: 'Unauthorized'
+        })
+        return;
+    }
+
+    const user = await client.user.findUnique({
+        where: {
+            id: userId
+        }
+    })
+
+    if (!user) {
+        res.status(401).json({
+            message: 'Unauthorized'
+        })
+        return;
+    }
+
+    res.status(200).json({
+        message: 'User verified successfully',
+        user: user
+    });
+});
+
 
 export default router;

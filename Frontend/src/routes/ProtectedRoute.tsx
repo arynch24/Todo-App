@@ -1,21 +1,22 @@
 import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
 import { useEffect } from "react";
+import axios from "axios";
 
 const ProtectedRoute = ({ children }: any) => {
   const navigate = useNavigate();
-  const token = Cookies.get("token");
-  console.log("Dashboard token"+token);
 
   useEffect(() => {
-    const checkToken = () => {
-      if (!token) {
+    const checkToken = async () => {
+      const res = await axios.get("https://routine-jf3l.onrender.com/api/user/verify");
+
+      if (res.status !== 200) {
         navigate("/signin");
       }
     }
+
     checkToken();
   }
-    , [token, navigate]);
+    , []);
 
   return children;
 };

@@ -68,9 +68,7 @@ const NavBar = () => {
 
   const logout = async () => {
     try {
-      await axios.post("https://routine-jf3l.onrender.com/api/user/logout", {}, {
-        withCredentials: true,
-      });
+      await axios.get("https://routine-jf3l.onrender.com/api/user/signout");
       navigate("/");
     } catch (err) {
       console.error(err);

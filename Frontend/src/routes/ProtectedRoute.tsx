@@ -7,7 +7,10 @@ const ProtectedRoute = ({ children }: any) => {
 
   useEffect(() => {
     const checkToken = async () => {
-      const res = await axios.get("https://routine-jf3l.onrender.com/api/user/verify");
+      const res = await axios.get("https://routine-jf3l.onrender.com/api/user/verify",
+        {
+          withCredentials: true,
+        });
 
       if (res.status !== 200) {
         navigate("/signin");

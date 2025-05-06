@@ -165,20 +165,13 @@ router.post('/createtodo', authMiddleware, (req, res) => __awaiter(void 0, void 
         });
         return;
     }
-    const parsedDate = new Date(createdAt);
-    if (isNaN(parsedDate.getTime())) {
-        return res.status(400).json({
-            message: 'Invalid date format for createdAt'
-        });
-    }
-    const todo = yield client.todo.create({
-        data: {
-            userId,
-            title,
-            description,
-            createdAt: parsedDate
-        }
-    });
+    const data = {
+        userId,
+        title,
+        description,
+        createdAt: new Date(createdAt)
+    };
+    const todo = yield client.todo.create({ data });
     res.status(200).json({
         message: 'Todo created successfully',
         todo: todo

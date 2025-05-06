@@ -55,11 +55,9 @@ const NavBar = () => {
 
         if (res.status === 200) {
           setIsVerified(true);
-        } else {
-          navigate("/signin");
-        }
+        } 
       } catch (err) {
-        navigate("/signin");
+        setIsVerified(false);
       }
     };
 

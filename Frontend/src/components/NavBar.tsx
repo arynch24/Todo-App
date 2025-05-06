@@ -64,7 +64,7 @@ const NavBar = () => {
     };
 
     checkToken();
-  }, [navigate, isVerified]);
+  }, [navigate]);
 
   const logout = async () => {
     try {

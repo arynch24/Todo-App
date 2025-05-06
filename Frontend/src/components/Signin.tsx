@@ -9,6 +9,7 @@ const SignIn = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const {loading, setLoading } = useContext(LoadingContext);
+    const [checkCredetials, setCheckCredentials] = useState("");
     const navigate = useNavigate();
 
     const handleSignInButton = async () => {
@@ -30,10 +31,11 @@ const SignIn = () => {
 
             if (res.status === 200) {
                 navigate("/dashboard", { replace: true });
+                setCheckCredentials("");
             }
         } catch (err) {
             console.error(err);
-            alert("Sign-in failed. Check credentials.");
+            setCheckCredentials("Email or password is incorrect!");
         }
         finally {
             setLoading(false);
@@ -68,6 +70,7 @@ const SignIn = () => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />
+                        <p className='text-red-500 text-sm font-semibold py-1'>{checkCredetials}</p>
                         <div onClick={handleSignInButton}>
                             <button className="w-full bg-coral text-white px-4 py-2 rounded-md">
                                 Sign In

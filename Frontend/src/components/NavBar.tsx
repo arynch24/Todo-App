@@ -72,6 +72,7 @@ const NavBar = () => {
           withCredentials: true,
       });
       navigate("/");
+      setIsVerified(false);
     } catch (err) {
       console.error(err);
     }

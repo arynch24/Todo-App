@@ -48,16 +48,13 @@ const NavBar = () => {
 
   useEffect(() => {
     const checkToken = async () => {
-      try {
-        const res = await axios.get("https://routine-jf3l.onrender.com/api/user/verify", {
-          withCredentials: true,
-        });
 
-        if (res.status === 200) {
-          setIsVerified(true);
-        } 
-      } catch (err) {
-        setIsVerified(false);
+      const res = await axios.get("https://routine-jf3l.onrender.com/api/user/verify", {
+        withCredentials: true,
+      });
+
+      if (res.status === 200) {
+        setIsVerified(true);
       }
     };
 
@@ -66,8 +63,8 @@ const NavBar = () => {
 
   const logout = async () => {
     try {
-      await axios.get("https://routine-jf3l.onrender.com/api/user/signout",{
-          withCredentials: true,
+      await axios.get("https://routine-jf3l.onrender.com/api/user/signout", {
+        withCredentials: true,
       });
       navigate("/");
       setIsVerified(false);

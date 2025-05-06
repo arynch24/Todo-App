@@ -53,7 +53,8 @@ router.post('/signup', async (req: any, res: any) => {
 
     const token = jwt.sign({ userId }, JWT_SECRET || "");
     res.cookie('token', token, {
-        samesite: 'lax',
+        sameSite: 'none',
+        secure: true,
         expires: new Date(Date.now() + 60 * 60 * 1000 * 24 * 7),
     });
 
@@ -100,8 +101,10 @@ router.post('/signin', async (req: any, res: any) => {
     const userId = existingUser.id;
 
     const token = jwt.sign({ userId }, JWT_SECRET || "");
+
     res.cookie('token', token, {
-        samesite: 'lax',
+        sameSite: 'none',
+        secure: true,
         expires: new Date(Date.now() + 60 * 60 * 1000 * 24 * 7),
     });
 

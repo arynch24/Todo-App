@@ -5,7 +5,7 @@ import cors from 'cors';
 const app = express();
 
 app.use(cors({
-  origin: "https://routine-three-nu.vercel.app/", // frontend origin
+  origin: "https://routine-three-nu.vercel.app", // frontend origin
   credentials: true,              // 👈 this is important
 }));
 

@@ -29,7 +29,7 @@ const Dashboard = () => {
     if (!createTodo.trim()) return;
 
     try {
-      const res = await axios.post("http://localhost:3000/api/user/createtodo", {
+      const res = await axios.post("https://routine-jf3l.onrender.com/api/user/createtodo", {
         title: createTodo,
         description: "dd",
         createdAt: selectedDate.toISOString()
@@ -54,7 +54,7 @@ const Dashboard = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:3000/api/user/updatetodo",
+        "https://routine-jf3l.onrender.com/api/user/updatetodo",
         {
           id: todoId,
           ...updateData,
@@ -110,7 +110,7 @@ const Dashboard = () => {
     const fetchTodos = async () => {
       try {
         setIsLoading(true);
-        const res = await axios.get(`http://localhost:3000/api/user/todos?date=${selectedDate.toISOString()}`, {
+        const res = await axios.get(`https://routine-jf3l.onrender.com/api/user/todos?date=${selectedDate.toISOString()}`, {
           withCredentials: true,
         });
         setTodos(res.data.todos);
@@ -137,7 +137,7 @@ const Dashboard = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:3000/api/user/deletetodo",
+        "https://routine-jf3l.onrender.com/api/user/deletetodo",
         { id: todoId },
         {
           withCredentials: true,

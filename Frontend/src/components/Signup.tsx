@@ -22,7 +22,7 @@ const SignUp = () => {
 
         try {
             setLoading(true);
-            const res = await axios.post("http://localhost:3000/api/user/signup", {
+            const res = await axios.post("https://routine-jf3l.onrender.com/api/user/signup", {
                 username,
                 firstName,
                 lastName,

@@ -5,7 +5,7 @@ import cors from 'cors';
 const app = express();
 
 app.use(cors({
-  origin: "http://localhost:5173", // frontend origin
+  origin: "https://routine-jf3l.onrender.com", // frontend origin
   credentials: true,              // 👈 this is important
 }));
 

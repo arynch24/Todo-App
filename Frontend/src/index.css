@@ -1,20 +1,20 @@
 @import "tailwindcss";
 
 :root {
-    --coral: #f96359;
-  }
-  
-  @layer utilities {
-    .bg-coral {
-      background-color: var(--coral);
-    }
-  
-    .text-coral {
-      color: var(--coral);
-    }
+  --coral: #f96359;
+}
+
+@layer utilities {
+  .bg-coral {
+    background-color: var(--coral);
   }
 
-  .todo-loader-container {
+  .text-coral {
+    color: var(--coral);
+  }
+}
+
+.todo-loader-container {
   padding: 1rem;
   display: flex;
   flex-direction: column;
@@ -31,7 +31,8 @@
   width: 16px;
   height: 16px;
   background-color: #f3f3f3;
-  border-radius: 4px; /* Use 50% for circle instead */
+  border-radius: 4px;
+  /* Use 50% for circle instead */
   position: relative;
   overflow: hidden;
 }
@@ -53,12 +54,10 @@
   left: -100%;
   height: 100%;
   width: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.6),
-    transparent
-  );
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.6),
+      transparent);
   animation: shimmer 1.5s infinite;
 }
 
@@ -66,4 +65,152 @@
   100% {
     left: 100%;
   }
+}
+
+/* ======== TIME SLOTS ======== */
+.fc-timegrid-slot {
+  height: 80px !important;
+}
+
+/* Minor slots (e.g. 30-min intervals) */
+.fc-timegrid-slot-minor {
+  background-color: #ffffff;
+}
+
+.fc-timegrid-slot-lane {
+  border-bottom: 1px solid #d4d4d9 !important;
+  /* border-left: 1px solid white !important; */
+}
+
+.fc-timegrid-axis {
+  background-color: #ffffff;
+}
+
+/* Slot labels (left-side time) */
+.fc-timegrid-slot-label {
+  background-color: #ffffff;
+  border: none !important;
+  padding: 4px;
+  font-size: 13px;
+}
+
+.fc {
+  color: #9f9fa9;
+}
+
+/* ======== EVENTS ======== */
+.fc-event {
+  background-color: #6366f1 !important;
+  /* Indigo-500 */
+  color: white !important;
+  border: none !important;
+  border-radius: 8px;
+  padding: 4px;
+  font-size: 13px;
+}
+
+/* Event title */
+.fc-event-title {
+  font-weight: 600;
+}
+
+/* Optional: hover effect */
+.fc-event:hover {
+  opacity: 0.9;
+  cursor: pointer;
+}
+
+/* ======== TODAY HIGHLIGHT ======== */
+.fc-day-today {
+  background-color: rgb(252, 245, 244) !important;
+  /* light blue */
+}
+
+/* ======== NOW INDICATOR (RED LINE) ======== */
+.fc-timegrid-now-indicator-line {
+  background-color: #ef4444;
+  /* red-500 */
+  height: 2px;
+}
+
+/* ======== HEADER TOOLBAR ======== */
+.fc-toolbar {
+  background-color: #f1f5f9;
+  padding: 10px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.fc-toolbar-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #9f9fa9;
+}
+
+/* ======== DAY HEADERS (e.g. Mon, Tue) ======== */
+.fc-col-header-cell-cushion {
+  color: #9f9fa9;
+  padding: 16px !important;
+  font-size: 16px;
+  font-weight: 300;
+}
+
+.fc-col-header-cell {
+  color: #9f9fa9;
+}
+
+.fc-scrollgrid-sync-inner {
+  background-color: #ffffff;
+  border: none !important;
+}
+
+/* ======== CUSTOM SCROLLBAR (Optional) ======== */
+.fc-scroller::-webkit-scrollbar {
+  width: 6px;
+}
+
+.fc-scroller::-webkit-scrollbar-thumb {
+  background: #9f9fa9;
+  border-radius: 4px;
+}
+
+.fc-toolbar-title{
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  color: rgb(13, 12, 12) !important;
+}
+.fc-header-toolbar{
+  background-color: #ffffff !important;
+  border: none !important;
+  margin-bottom: 0px !important;
+}
+
+.fc-toolbar-chunk{
+  display: flex;
+  align-items: center;
+  padding:0px 10px;
+}
+
+.fc-button{
+  background-color: white !important;
+  border: none !important;
+  color: #9f9fa9 !important;
+  font-size: 12px !important;
+  padding: 6px  !important;  
+}
+
+.fc-button:focus{
+  outline: none !important;
+  border:none !important;
+  box-shadow: none !important;
+}
+
+.fc-button:hover{
+  background-color: #f3f4f6 !important;
+  color: #9f9fa9 !important;
+  border:1px solid rgb(151, 151, 151) !important;
+}
+
+.fc-button-active{
+  background-color: #efeff3 !important;
+  border:1px solid rgb(151, 151, 151) !important;
 }

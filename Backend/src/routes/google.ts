@@ -44,7 +44,7 @@ router.get('/callback',authMiddleware, async (req: any, res: any) => {
             }
         })
 
-        res.redirect('https://routine-jf3l.onrender.com/dashboard');
+        res.redirect('https://routine-three-nu.vercel.app/dashboard');
     } catch (error) {
         console.error('Error retrieving access token', error);
         res.status(500).send('Authentication failed');

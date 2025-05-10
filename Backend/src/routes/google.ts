@@ -44,7 +44,7 @@ router.get('/callback',authMiddleware, async (req: any, res: any) => {
             }
         })
 
-        res.redirect('http://localhost:5173/dashboard');
+        res.redirect('https://routine-jf3l.onrender.com/dashboard');
     } catch (error) {
         console.error('Error retrieving access token', error);
         res.status(500).send('Authentication failed');

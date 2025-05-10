@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { ChevronLeftIcon, ChevronRightIcon, TrashIcon } from "@heroicons/react/24/outline";
 import axios from 'axios';
 import TodoLoader from '../components/Loader';
+import {CalendarDays} from 'lucide-react'
 
 const Dashboard = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -206,6 +207,9 @@ const Dashboard = () => {
 
   return (
     <div className='w-sm ml-10 mt-8 sm:ml-24 sm:mt-16'>
+      <div>
+        <CalendarDays className='h-8 w-8 text-zinc-500' />
+      </div>
       <div className='inline-block hover:bg-gray-100 hover:rounded-md px-4 py-2 mb-4'>
         <div className='flex gap-3 mb-1'>
           <div className='text-2xl text-zinc-900'>{day}</div>

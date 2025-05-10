@@ -5,13 +5,13 @@ import cors from 'cors';
 const app = express();
 
 app.use(cors({
-  origin: "https://routine-three-nu.vercel.app", // frontend origin
+  origin: ["https://routine-three-nu.vercel.app","http://localhost:5173"], // frontend origin
   credentials: true,              // 👈 this is important
 }));
 
 //if the request comes to /api go to rootrouter
-app.use('/api', rootRouter);
 app.use(express.json());
+app.use('/api', rootRouter);
 
 app.listen(3000, () => {
   console.log("Server is Running");

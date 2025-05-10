@@ -1,7 +1,9 @@
-const router = require('express').Router();
-const { google } = require('googleapis');
+import express from 'express';
+import { google } from 'googleapis';
 import { PrismaClient } from "@prisma/client";
 import authMiddleware from '../middleware';
+
+const router = express.Router();
 
 const prisma = new PrismaClient();
 

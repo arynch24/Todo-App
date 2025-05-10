@@ -68,7 +68,7 @@ function googleAuthMiddleware(req: any, res: any, next: any) {
     next();
 }
 
-router.get('/events/create', authMiddleware, googleAuthMiddleware, async (req: any, res: any) => {
+router.post('/events/create', authMiddleware, googleAuthMiddleware, async (req: any, res: any) => {
     const oauth2Client = req.oauth2Client;
     const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
 

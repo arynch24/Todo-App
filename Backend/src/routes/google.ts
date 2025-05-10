@@ -1,7 +1,7 @@
 import express from 'express';
 import { google } from 'googleapis';
 import { PrismaClient } from "@prisma/client";
-import authMiddleware from '../middleware';
+import authMiddleware from '../middleware.js';
 
 const router = express.Router();
 

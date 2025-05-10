@@ -1,4 +1,3 @@
-// Calendar.js
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -28,8 +27,7 @@ export default function CalendarComponent() {
         editable={true}
         selectable={true}
         events={[
-          { title: "Meeting", date: "2025-05-11" },
-          // Add dynamic events later
+          { title: "Meeting", date: "2025-05-11" }
         ]}
         dateClick={(info) => {
           alert("Clicked date: " + info.dateStr);

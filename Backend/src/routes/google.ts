@@ -35,11 +35,11 @@ router.get('/callback', authMiddleware, async (req: any, res: any) => {
     try {
         const { tokens } = await oauth2Client.getToken(code);
         oauth2Client.setCredentials(tokens);
-        
+
         console.log('Refresh Token:', tokens.refresh_token);
 
         // Store the tokens in the session or database
-        prisma.user.update({
+        await prisma.user.update({
             where: { id: req.userId },
             data: {
                 googleRefreshToken: tokens.refresh_token

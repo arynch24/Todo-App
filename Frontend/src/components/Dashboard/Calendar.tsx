@@ -18,7 +18,7 @@ export default function CalendarComponent() {
 
   //Fetching Events from the backend
   const fetchEvents = async () => {
-    const res = await axios.get('https://routine-jf3l.onrender.com/events', {
+    const res = await axios.get('https://routine-jf3l.onrender.com/api/google/events', {
       withCredentials: true,
     });
 
@@ -49,7 +49,7 @@ export default function CalendarComponent() {
         end: e.endStr,
       };
 
-      const res = await axios.post('https://routine-jf3l.onrender.com/events', newEvent, {
+      const res = await axios.post('https://routine-jf3l.onrender.com/api/google/events/create', newEvent, {
         withCredentials: true,
       });
 
@@ -69,7 +69,7 @@ export default function CalendarComponent() {
       end: event.endStr,
     };
 
-    await axios.patch(`https://routine-jf3l.onrender.com/events/${event.id}`, updatedEvent, {
+    await axios.patch(`https://routine-jf3l.onrender.com/api/google/events/${event.id}`, updatedEvent, {
       withCredentials: true,
     });
 
@@ -84,7 +84,7 @@ export default function CalendarComponent() {
   const handleEventClick = async (e:any) => {
     const event = e.event;
     if (confirm(`Delete event '${event.title}'`)) {
-      await axios.delete(`https://routine-jf3l.onrender.com/events/${event.id}`, {
+      await axios.delete(`https://routine-jf3l.onrender.com/api/google/events/${event.id}`, {
         withCredentials: true,
       });
 

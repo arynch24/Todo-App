@@ -10,7 +10,7 @@ const MenuBar = ({ isVerified, navigate, logout }: { isVerified: boolean, naviga
         <>
           <button
             className="w-full text-coral bg-[#FBEFEE] text-md font-semibold p-2 hover:bg-[#fddddd] transition-colors rounded-sm"
-            onClick={() => navigate('/dashboard')}
+            onClick={() => navigate('/dashboard/agenda')}
           >
             Dashboard
           </button>
@@ -104,7 +104,7 @@ const NavBar = () => {
           <>
             <button
               className="text-coral bg-[#FBEFEE] text-md font-semibold mr-2 px-3 py-2 rounded-md cursor-pointer hover:bg-[#fddddd] transition-colors"
-              onClick={() => navigate('/dashboard')}
+              onClick={() => navigate('/dashboard/agenda')}
             >
               Dashboard
             </button>

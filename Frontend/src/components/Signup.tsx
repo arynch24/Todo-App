@@ -34,7 +34,7 @@ const SignUp = () => {
             console.log(res.data);
 
             if (res.status === 200) {
-                navigate("/dashboard");
+                navigate("/dashboard/agenda");
                 setUserExist("");
             }
 

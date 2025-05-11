@@ -224,27 +224,27 @@ export default function CalendarComponent() {
             <div className="h-full">
               <form className="h-full flex flex-col justify-between">
                 <div>
-                  <div className="flex items-center">
+                  <div className="flex items-center border-b-1 border-zinc-300">
                     <input
                       type="text"
                       placeholder="Unitiled"
-                      className="border-b-1 border-zinc-300 p-2 font-semibold text-zinc-700 text-xl focus:outline-none w-full mb-4 mt-2"
+                      className=" p-3 font-semibold text-zinc-600 text-lg focus:outline-none w-full "
                       onChange={(e: any) => { setTitle(e.target.value) }}
                       value={title}
                     />
-                    <div className="p-1 mr-1 mb-1 hover:bg-zinc-100 cursor-pointer rounded-lg">
+                    <div className="p-1 mr-2 mt-1 hover:bg-zinc-100 cursor-pointer rounded-lg">
                       <PanelRightOpen strokeWidth={1} size={18}
                         className="text-zinc-400 hover:bg-zinc-100 hover:text-zinc-500 "
                         onClick={() => { setIsOpenEditor(false) }}
                       />
                     </div>
                   </div>
-                  <input
-                    type="text"
+                  <textarea
                     placeholder="Add Description"
-                    className=" p-2 rounded w-full text-sm mb-4 focus:outline-none"
-                    onChange={(e: any) => { setDescription(e.target.value) }}
+                    className="p-3 w-full text-zinc-600 text-sm mb-4 focus:outline-none focus:bg-zinc-50 resize-none"
+                    onChange={(e: any) => setDescription(e.target.value)}
                     value={description}
+                    rows={4}
                   />
                 </div>
 

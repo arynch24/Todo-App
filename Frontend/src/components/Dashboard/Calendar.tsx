@@ -8,9 +8,10 @@ import axios from "axios";
 export default function CalendarComponent() {
   type EventType = {
     id: string;
-    summary: string;
+    title: string;
     start: string | Date;
     end: string | Date;
+    allDay: boolean;
   };
 
   //State to store events
@@ -23,15 +24,16 @@ export default function CalendarComponent() {
     });
 
     const data = res.data;
-    const formatted = data.map((e:any)=>{
+    const formatted = data.map((e: any) => {
       return {
         id: e.id,
-        start: e.start,
-        end: e.end,
+        start: e.start.dateTime,
+        end: e.end.dateTime,
         title: e.summary,
         allDay: false
       }
     });
+    console.log(formatted);
     setEvents(formatted);
   }
 
@@ -39,49 +41,90 @@ export default function CalendarComponent() {
     fetchEvents();
   }, []);
 
+  useEffect(() => {
+    console.log("Updated events:", events);
+  }, [events]);
+
   //Creating Events
-  const handleCreateEvent = async (e:any) => {
+  const handleCreateEvent = async (e: any) => {
     const title = prompt("New Event Title");
     if (title) {
       const newEvent = {
         summary: title,
-        start: e.startStr,
-        end: e.endStr,
+        start: {
+          dateTime: e.startStr,
+          timeZone: "Asia/Kolkata",
+        },
+        end: {
+          dateTime: e.endStr,
+          timeZone: "Asia/Kolkata",
+        },
       };
 
       const res = await axios.post('https://routine-jf3l.onrender.com/api/google/events/create', newEvent, {
         withCredentials: true,
       });
 
+      const formattedNewEvent = {
+        id: res.data.id,
+        start: newEvent.start.dateTime,
+        end: newEvent.end.dateTime,
+        title: newEvent.summary,
+        allDay: false,
+      };
+
       setEvents((prevEvents) => [
         ...prevEvents,
-        { id: res.data.id, ...newEvent },
+        { ...formattedNewEvent },
       ]);
     }
   };
 
   //Updating Events
-  const handleEventDrop = async (e:any) => {
-    const event= e.event;
+  const handleEventDrop = async (e: any) => {
+    const event = e.event;
     const updatedEvent = {
       id: event.id,
-      start: event.startStr,
-      end: event.endStr,
+      summary: event.title,
+      start: {
+        dateTime: event.startStr,
+        timeZone: "Asia/Kolkata",
+      },
+      end: {
+        dateTime: event.endStr,
+        timeZone: "Asia/Kolkata",
+      },
     };
 
-    await axios.patch(`https://routine-jf3l.onrender.com/api/google/events/${event.id}`, updatedEvent, {
-      withCredentials: true,
-    });
+    try {
+      await axios.patch(
+        `https://routine-jf3l.onrender.com/api/google/events/${event.id}`,
+        updatedEvent,
+        { withCredentials: true }
+      );
 
-    setEvents((prevEvents) =>
-      prevEvents.map((event) =>
-        event.id === updatedEvent.id ? { ...event, ...updatedEvent } : event
-      )
-    );
+      console.log("e.event - updated", event);
+
+      const formattedUpdatedEvent = {
+        id: event.id,
+        start: updatedEvent.start.dateTime,
+        end: updatedEvent.end.dateTime,
+        title: event.title,
+        allDay: false,
+      };
+
+      setEvents((prevEvents) =>
+        prevEvents.map((ev) =>
+          ev.id === updatedEvent.id ? { ...ev, ...formattedUpdatedEvent } : ev
+        )
+      );
+    } catch (err) {
+      console.error("Error updating event:", err);
+    }
   };
 
   //Deleting Events
-  const handleEventClick = async (e:any) => {
+  const handleEventClick = async (e: any) => {
     const event = e.event;
     if (confirm(`Delete event '${event.title}'`)) {
       await axios.delete(`https://routine-jf3l.onrender.com/api/google/events/${event.id}`, {
@@ -104,7 +147,7 @@ export default function CalendarComponent() {
         selectable={true}
 
         //pass an array of events objects to the events prop
-        events={events}
+        events={[{ id: "jsfhsfks", title: "Aryan ka app", start: "2025-05-11T06:25:00.908Z" }, ...events]}
         select={handleCreateEvent}
         eventClick={handleEventClick}
         eventDrop={handleEventDrop}

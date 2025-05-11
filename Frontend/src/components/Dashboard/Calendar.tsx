@@ -283,6 +283,7 @@ export default function CalendarComponent() {
           allDaySlot={false}
           editable={true}
           selectable={true}
+          nowIndicator={true}
 
           //pass an array of events objects to the events prop
           events={[...events]}

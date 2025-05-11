@@ -72,12 +72,12 @@
 }
 
 .fc-timegrid-slot-minor {
-  background-color: #ffffff;
+  border-bottom: 1px solid #ffffff !important;
+  border-top: 1px solid #e2e8f0 !important;
 }
 
 .fc-timegrid-slot-lane {
-  border-bottom: 1px solid #d4d4d9 !important;
-  /* border-left: 1px solid white !important; */
+  border-right:#df6767;
 }
 
 .fc-timegrid-axis {
@@ -123,7 +123,7 @@
 }
 
 .fc-timegrid-now-indicator-line {
-  background-color: #ef4444;
+  background-color: #df6767;
   height: 2px;
 }
 
@@ -151,7 +151,6 @@
 }
 
 .fc-scrollgrid-sync-inner {
-  background-color: #ffffff;
   border: none !important;
 }
 
@@ -204,4 +203,8 @@
 .fc-button-active{
   background-color: #efeff3 !important;
   border:1px solid rgb(151, 151, 151) !important;
+}
+
+.fc-timegrid-cols {
+  border-right: 1px solid #0041c3 !important; 
 }

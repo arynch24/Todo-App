@@ -9,6 +9,7 @@ export default function CalendarComponent() {
   type EventType = {
     id: string;
     title: string;
+    description: string;
     start: string | Date;
     end: string | Date;
     allDay: boolean;
@@ -16,6 +17,11 @@ export default function CalendarComponent() {
 
   //State to store events
   const [events, setEvents] = useState<EventType[]>([]);
+  const [isOpenEditor, setIsOpenEditor] = useState(true);
+  const [title, setTitle] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [selectedSlot, setSelectedSlot] = useState<{ startStr: string; endStr: string } | null>(null);
+  const [editEventId, setEditEventId] = useState<string | null>(null);
 
   //Fetching Events from the backend
   const fetchEvents = async () => {
@@ -30,6 +36,7 @@ export default function CalendarComponent() {
         start: e.start.dateTime,
         end: e.end.dateTime,
         title: e.summary,
+        description: e.description || "",
         allDay: false
       }
     });
@@ -46,21 +53,23 @@ export default function CalendarComponent() {
   }, [events]);
 
   //Creating Events
-  const handleCreateEvent = async (e: any) => {
-    const title = prompt("New Event Title");
-    if (title) {
-      const newEvent = {
-        summary: title,
-        start: {
-          dateTime: e.startStr,
-          timeZone: "Asia/Kolkata",
-        },
-        end: {
-          dateTime: e.endStr,
-          timeZone: "Asia/Kolkata",
-        },
-      };
+  const handleCreateEvent = async () => {
+    if (!selectedSlot) return;
 
+    const newEvent = {
+      summary: title,
+      description: description,
+      start: {
+        dateTime: selectedSlot.startStr,
+        timeZone: "Asia/Kolkata",
+      },
+      end: {
+        dateTime: selectedSlot.endStr,
+        timeZone: "Asia/Kolkata",
+      },
+    };
+
+    try {
       const res = await axios.post('https://routine-jf3l.onrender.com/api/google/events/create', newEvent, {
         withCredentials: true,
       });
@@ -70,6 +79,7 @@ export default function CalendarComponent() {
         start: newEvent.start.dateTime,
         end: newEvent.end.dateTime,
         title: newEvent.summary,
+        description: newEvent.description,
         allDay: false,
       };
 
@@ -78,20 +88,84 @@ export default function CalendarComponent() {
         { ...formattedNewEvent },
       ]);
     }
+    catch (err) {
+      console.error("Error creating event:", err);
+    }
+
   };
 
-  //Updating Events
-  const handleEventDrop = async (e: any) => {
+  //handle Save Edit
+  const handleSaveEdit = (e: any) => {
     const event = e.event;
+    setEditEventId(event.id);
+    setTitle(event.title);
+    setDescription(event.extendedProps.description);
+    setIsOpenEditor(true);
+    setSelectedSlot({
+      startStr: event.startStr,
+      endStr: event.endStr,
+    });
+  }
+
+  //Updating Events Content
+  const handleEventUpdate = async () => {
+    if (!editEventId || !selectedSlot) return;
+
     const updatedEvent = {
-      id: event.id,
-      summary: event.title,
+      id: editEventId,
+      summary: title,
+      description: description,
       start: {
-        dateTime: event.startStr,
+        dateTime: selectedSlot.startStr,
         timeZone: "Asia/Kolkata",
       },
       end: {
-        dateTime: event.endStr,
+        dateTime: selectedSlot.endStr,
+        timeZone: "Asia/Kolkata",
+      },
+    };
+
+    try {
+      await axios.patch(
+        `https://routine-jf3l.onrender.com/api/google/events/${editEventId}`,
+        updatedEvent,
+        { withCredentials: true }
+      );
+
+      console.log("e.event - updated", event);
+
+      const formattedUpdatedEvent = {
+        id: editEventId,
+        start: updatedEvent.start.dateTime,
+        end: updatedEvent.end.dateTime,
+        title: title,
+        description: description,
+        allDay: false,
+      };
+
+      setEvents((prevEvents) =>
+        prevEvents.map((ev) =>
+          ev.id === editEventId ? { ...ev, ...formattedUpdatedEvent } : ev
+        )
+      );
+    } catch (err) {
+      console.error("Error updating event:", err);
+    }
+  };
+
+  //handling drag or resize
+  const handleDragOrResize = async (e: any) => {
+    const event = e.event;
+
+    const updatedEvent = {
+      summary: event.title,
+      description: event.extendedProps.description || "",
+      start: {
+        dateTime: event.start.toISOString(),
+        timeZone: "Asia/Kolkata",
+      },
+      end: {
+        dateTime: event.end.toISOString(),
         timeZone: "Asia/Kolkata",
       },
     };
@@ -103,25 +177,20 @@ export default function CalendarComponent() {
         { withCredentials: true }
       );
 
-      console.log("e.event - updated", event);
-
-      const formattedUpdatedEvent = {
-        id: event.id,
-        start: updatedEvent.start.dateTime,
-        end: updatedEvent.end.dateTime,
-        title: event.title,
-        allDay: false,
-      };
-
       setEvents((prevEvents) =>
         prevEvents.map((ev) =>
-          ev.id === updatedEvent.id ? { ...ev, ...formattedUpdatedEvent } : ev
+          ev.id === event.id ? {
+            ...ev,
+            start: updatedEvent.start.dateTime,
+            end: updatedEvent.end.dateTime,
+          } : ev
         )
       );
     } catch (err) {
       console.error("Error updating event:", err);
     }
   };
+
 
   //Deleting Events
   const handleEventClick = async (e: any) => {
@@ -138,42 +207,96 @@ export default function CalendarComponent() {
   };
 
   return (
-    <div className="h-full w-full overflow-clip">
-      <FullCalendar
-        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-        initialView="timeGridWeek"
-        allDaySlot={false}
-        editable={true}
-        selectable={true}
+    <div className="h-full w-full flex">
+      {
+        isOpenEditor && (
+          <div className="w-54 h-full border-r-1 border-zinc-300 ">
+            <div className="h-full">
+              <form className="h-full flex flex-col justify-between">
+                <div>
+                  <input
+                    type="text"
+                    placeholder="Unitiled"
+                    className="border-b-1 border-zinc-300 p-2 font-semibold text-zinc-700 text-xl focus:outline-none w-full mb-4 mt-2"
+                    onChange={(e: any) => { setTitle(e.target.value) }}
+                    value={title}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Add Description"
+                    className=" p-2 rounded w-full text-sm mb-4 focus:outline-none"
+                    onChange={(e: any) => { setDescription(e.target.value) }}
+                    value={description}
+                  />
+                </div>
+                {
+                  (title || description) && (
+                    <div className=" w-full flex justify-between p-3 mb-2">
+                      <button
+                        type="button"
+                        onClick={() => setIsOpenEditor(false)}
+                        className="text-coral border-1 border-[#fac0c0] px-2 py-1 hover:bg-[#f8eaea] transition-colors rounded-sm"
+                      >
+                        Discard
+                      </button>
+                      <button
+                        type="button"
+                        className="bg-zinc-800 text-white px-3 py-1 rounded"
+                        onClick={editEventId ? handleEventUpdate : handleCreateEvent}
+                      >
+                        {editEventId ? "Update" : "Create"}
+                      </button>
+                    </div>)
+                }
 
-        //pass an array of events objects to the events prop
-        events={[{ id: "jsfhsfks", title: "Aryan ka app", start: "2025-05-11T06:25:00.908Z" }, ...events]}
-        select={handleCreateEvent}
-        eventClick={handleEventClick}
-        eventDrop={handleEventDrop}
+              </form>
+            </div>
+          </div>
+        )
+      }
+      <div className="flex-1 w-full">
+        <FullCalendar
+          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+          initialView="timeGridWeek"
+          allDaySlot={false}
+          editable={true}
+          selectable={true}
 
-        headerToolbar={{
-          left: 'title prev,next',
-          right: 'dayGridMonth,timeGridWeek,timeGridDay'
-        }}
-        slotLabelFormat={{
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: false,
-        }}
-        eventTimeFormat={{
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: false,
-        }}
-        slotDuration={"01:00:00"}
-        slotLabelInterval={"01:00:00"}
-        dayHeaderFormat={{ weekday: 'short', day: '2-digit', omitCommas: true }}
-        titleFormat={{
-          year: 'numeric',
-          month: 'short',
-        }}
-      />
+          //pass an array of events objects to the events prop
+          events={[{ id: "jsfhsfks", title: "Aryan ka app", start: "2025-05-11T06:25:00.908Z" }, ...events]}
+          select={(e) => {
+            setTitle("");
+            setDescription("");
+            setIsOpenEditor(true);
+            setSelectedSlot({ startStr: e.startStr, endStr: e.endStr });
+          }}
+          eventClick={handleSaveEdit}
+          eventDrop={handleDragOrResize}
+          eventResize={handleDragOrResize}
+
+          headerToolbar={{
+            left: 'title prev,next',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+          }}
+          slotLabelFormat={{
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+          }}
+          eventTimeFormat={{
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+          }}
+          slotDuration={"00:15:00"}
+          slotLabelInterval={"01:00:00"}
+          dayHeaderFormat={{ weekday: 'short', day: '2-digit', omitCommas: true }}
+          titleFormat={{
+            year: 'numeric',
+            month: 'short',
+          }}
+        />
+      </div>
     </div>
   );
 }

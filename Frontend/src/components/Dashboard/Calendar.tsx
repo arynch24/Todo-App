@@ -3,6 +3,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { useEffect, useState } from "react";
+import { PanelRightOpen } from 'lucide-react';
 import axios from "axios";
 
 export default function CalendarComponent() {
@@ -87,6 +88,8 @@ export default function CalendarComponent() {
         ...prevEvents,
         { ...formattedNewEvent },
       ]);
+      setIsOpenEditor(false);
+      setEditEventId(null);
     }
     catch (err) {
       console.error("Error creating event:", err);
@@ -193,34 +196,49 @@ export default function CalendarComponent() {
 
 
   //Deleting Events
-  const handleEventClick = async (e: any) => {
-    const event = e.event;
-    if (confirm(`Delete event '${event.title}'`)) {
-      await axios.delete(`https://routine-jf3l.onrender.com/api/google/events/${event.id}`, {
+  const handleEventDelete = async () => {
+    if (!editEventId) return;
+
+    try {
+      await axios.delete(`https://routine-jf3l.onrender.com/api/google/events/${editEventId}`, {
         withCredentials: true,
       });
 
       setEvents((prevEvents) =>
-        prevEvents.filter((e) => e.id !== event.id)
+        prevEvents.filter((e) => e.id !== editEventId)
       );
+      setEditEventId(null);
+      setTitle("");
+      setDescription("");
+    }
+    catch (err) {
+      console.error("Error deleting event:", err);
     }
   };
 
   return (
-    <div className="h-full w-full flex">
+    <div className="h-full w-full flex ">
       {
         isOpenEditor && (
           <div className="w-54 h-full border-r-1 border-zinc-300 ">
             <div className="h-full">
               <form className="h-full flex flex-col justify-between">
                 <div>
-                  <input
-                    type="text"
-                    placeholder="Unitiled"
-                    className="border-b-1 border-zinc-300 p-2 font-semibold text-zinc-700 text-xl focus:outline-none w-full mb-4 mt-2"
-                    onChange={(e: any) => { setTitle(e.target.value) }}
-                    value={title}
-                  />
+                  <div className="flex items-center">
+                    <input
+                      type="text"
+                      placeholder="Unitiled"
+                      className="border-b-1 border-zinc-300 p-2 font-semibold text-zinc-700 text-xl focus:outline-none w-full mb-4 mt-2"
+                      onChange={(e: any) => { setTitle(e.target.value) }}
+                      value={title}
+                    />
+                    <div className="p-1 mr-1 mb-1 hover:bg-zinc-100 cursor-pointer rounded-lg">
+                      <PanelRightOpen strokeWidth={1} size={18}
+                        className="text-zinc-400 hover:bg-zinc-100 hover:text-zinc-500 "
+                        onClick={() => { setIsOpenEditor(false) }}
+                      />
+                    </div>
+                  </div>
                   <input
                     type="text"
                     placeholder="Add Description"
@@ -229,19 +247,23 @@ export default function CalendarComponent() {
                     value={description}
                   />
                 </div>
+
                 {
                   (title || description) && (
                     <div className=" w-full flex justify-between p-3 mb-2">
+                      {
+                        editEventId && (<button
+                          type="button"
+                          onClick={handleEventDelete}
+                          className="text-coral border-1 border-[#fac0c0] px-2 py-1 hover:bg-[#f8eaea] cursor-pointer transition-colors rounded-sm"
+                        >
+                          Delete
+                        </button>)
+                      }
+
                       <button
                         type="button"
-                        onClick={() => setIsOpenEditor(false)}
-                        className="text-coral border-1 border-[#fac0c0] px-2 py-1 hover:bg-[#f8eaea] transition-colors rounded-sm"
-                      >
-                        Discard
-                      </button>
-                      <button
-                        type="button"
-                        className="bg-zinc-800 text-white px-3 py-1 rounded"
+                        className="bg-zinc-800 text-white px-3 py-1 rounded cursor-pointer hover:bg-zinc-700 transition-colors"
                         onClick={editEventId ? handleEventUpdate : handleCreateEvent}
                       >
                         {editEventId ? "Update" : "Create"}
@@ -254,7 +276,7 @@ export default function CalendarComponent() {
           </div>
         )
       }
-      <div className="flex-1 w-full">
+      <div className="flex-1 w-full overflow-auto">
         <FullCalendar
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
           initialView="timeGridWeek"
@@ -263,12 +285,13 @@ export default function CalendarComponent() {
           selectable={true}
 
           //pass an array of events objects to the events prop
-          events={[{ id: "jsfhsfks", title: "Aryan ka app", start: "2025-05-11T06:25:00.908Z" }, ...events]}
+          events={[...events]}
           select={(e) => {
             setTitle("");
             setDescription("");
             setIsOpenEditor(true);
             setSelectedSlot({ startStr: e.startStr, endStr: e.endStr });
+            setEditEventId(null);
           }}
           eventClick={handleSaveEdit}
           eventDrop={handleDragOrResize}

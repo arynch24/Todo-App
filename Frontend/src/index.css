@@ -67,12 +67,10 @@
   }
 }
 
-/* ======== TIME SLOTS ======== */
 .fc-timegrid-slot {
   height: 20px !important;
 }
 
-/* Minor slots (e.g. 30-min intervals) */
 .fc-timegrid-slot-minor {
   background-color: #ffffff;
 }
@@ -86,7 +84,6 @@
   background-color: #ffffff;
 }
 
-/* Slot labels (left-side time) */
 .fc-timegrid-slot-label {
   background-color: #ffffff;
   border: none !important;
@@ -98,42 +95,38 @@
   color: #9f9fa9;
 }
 
-/* ======== EVENTS ======== */
 .fc-event {
-  background-color: #6366f1 !important;
-  /* Indigo-500 */
-  color: white !important;
+  background-color: #d4d5fc !important;
   border: none !important;
+  border-radius: 3px !important;
   border-radius: 8px;
   padding: 4px;
   font-size: 13px;
 }
 
-/* Event title */
 .fc-event-title {
-  font-weight: 600;
+  font-weight: 500;
+  color: #181c87 !important;
+}
+.fc-event-time {
+  font-weight: 400;
+  color: #181c87 !important;
 }
 
-/* Optional: hover effect */
 .fc-event:hover {
   opacity: 0.9;
   cursor: pointer;
 }
 
-/* ======== TODAY HIGHLIGHT ======== */
 .fc-day-today {
   background-color: rgb(252, 245, 244) !important;
-  /* light blue */
 }
 
-/* ======== NOW INDICATOR (RED LINE) ======== */
 .fc-timegrid-now-indicator-line {
   background-color: #ef4444;
-  /* red-500 */
   height: 2px;
 }
 
-/* ======== HEADER TOOLBAR ======== */
 .fc-toolbar {
   background-color: #f1f5f9;
   padding: 10px;
@@ -146,7 +139,6 @@
   color: #9f9fa9;
 }
 
-/* ======== DAY HEADERS (e.g. Mon, Tue) ======== */
 .fc-col-header-cell-cushion {
   color: #9f9fa9;
   padding: 16px !important;
@@ -163,7 +155,6 @@
   border: none !important;
 }
 
-/* ======== CUSTOM SCROLLBAR (Optional) ======== */
 .fc-scroller::-webkit-scrollbar {
   width: 6px;
 }

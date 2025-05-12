@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ChevronLeftIcon, ChevronRightIcon, TrashIcon } from "@heroicons/react/24/outline";
 import axios from 'axios';
-import TodoLoader from '../Loader';
+import TodoLoader from '../TodoLoader';
 
 const Agenda = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());

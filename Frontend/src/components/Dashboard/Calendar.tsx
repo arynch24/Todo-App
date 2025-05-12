@@ -18,7 +18,7 @@ export default function CalendarComponent() {
 
   //State to store events
   const [events, setEvents] = useState<EventType[]>([]);
-  const [isOpenEditor, setIsOpenEditor] = useState(true);
+  const [isOpenEditor, setIsOpenEditor] = useState(false);
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [selectedSlot, setSelectedSlot] = useState<{ startStr: string; endStr: string } | null>(null);

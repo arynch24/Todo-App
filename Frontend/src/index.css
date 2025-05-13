@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -13,6 +14,26 @@
     color: var(--coral);
   }
 }
+
+body{
+  font-family: "Geist", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+.custom-shadow-1:hover {
+  box-shadow: rgba(109, 18, 199, 0.16) 0px 0px 56px 15px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+}
+.custom-shadow-2:hover {
+  box-shadow: rgba(223, 105, 10, 0.16) 0px 0px 56px 15px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+}
+.custom-shadow-3:hover {
+  box-shadow: rgba(9, 82, 166, 0.16) 0px 0px 56px 15px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+}
+.custom-shadow-4:hover {
+  box-shadow: rgba(229, 179, 14, 0.16) 0px 0px 56px 15px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+}
+
 
 .todo-loader-container {
   padding: 1rem;

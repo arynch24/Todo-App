@@ -133,5 +133,23 @@ router.delete('/events/:id', authMiddleware, googleAuthMiddleware, async (req: a
     }
 });
 
+router.get('/check', authMiddleware, googleAuthMiddleware, async (req: any, res: any) => {
+    const oauth2Client = req.oauth2Client;
+
+    if(!oauth2Client) {
+        return res.status(401).json({ error: "No Refresh Token" });
+    }
+
+    const gmail = google.gmail({ version: 'v1', auth: oauth2Client });
+
+    try {
+        const profile = await gmail.users.getProfile({ userId: "me" });
+        const email = profile.data.emailAddress;
+        res.status(200).json({ email });
+    } catch (err) {
+        console.error("Error fetching email:", err);
+        res.status(500).json({ error: "Failed to fetch email" });
+    }
+});
 
 export default router;

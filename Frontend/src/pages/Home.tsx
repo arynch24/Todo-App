@@ -29,7 +29,7 @@ const Home = () => {
             <div className="w-full flex flex-col justify-center items-center " >
                 <h1 className="text-center text-5xl md:text-6xl mb-6 font-semibold text-zinc-800 tracking-tight">The all-in-one work platform</h1>
                 <p className="text-center text-xl md:text-2xl mb-16 text-zinc-700">Routine is the next-generation platform for professionals<br /> and teams to get things done faster!</p>
-                <button className="text-md bg-coral px-4 py-2 rounded-md text-white flex items-center gap-1" onClick={checkToken}>Get Started <ArrowRight size={16} strokeWidth={3} /></button>
+                <button className="text-md bg-coral px-4 py-2 rounded-md text-white flex items-center gap-1 cursor-pointer" onClick={checkToken}>Get Started <ArrowRight size={16} strokeWidth={3} /></button>
                 <div className="flex gap-3 mt-4">
                     {
                         icons.map((icon) => (

@@ -11,6 +11,9 @@ import Agenda from "./components/Dashboard/Agenda"
 import Calendar from "./components/Dashboard/Calendar"
 import Search from "./components/Dashboard/Search"
 import Settings from "./components/Dashboard/Settings"
+import Accounts from "./components/Dashboard/Settings/Accounts"
+import Preferences from "./components/Dashboard/Settings/Preferences"
+import Advanced from "./components/Dashboard/Settings/Advanced"
 
 function App() {
 
@@ -29,10 +32,18 @@ function App() {
               <Dashboard />
             </ProtectedRoute>
           }>
+            {/* This is the main dashboard route */}
             <Route path="agenda" element={<Agenda />} />
             <Route path="calendar" element={<Calendar />} />
-            <Route path="search" element={<Search/>} />
-            <Route path="settings" element={<Settings/>} />
+            <Route path="search" element={<Search />} />
+
+            {/* This is the settings route */}
+            <Route path="settings" element={<Settings />} >
+              <Route path="" element={<Accounts />} />
+              <Route path="Preferences" element={<Preferences />} />
+              <Route path="Advanced" element={<Advanced />} />
+            </Route>
+
           </Route>
         </Routes>
       </BrowserRouter>

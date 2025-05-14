@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import googleCalendar from '../../../assets/google-calendar.png';
-import TodoLoader from "../../TodoLoader";
 
 const Accounts = () => {
     const [userInfo, setUserInfo] = useState<any>(null);

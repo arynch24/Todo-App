@@ -150,8 +150,8 @@ router.get('/check', authMiddleware, googleAuthMiddleware, async (req: any, res:
         const userInfo = await oauth2.userinfo.get();
         res.status(200).json(userInfo.data);
     } catch (err) {
-        console.error("Error fetching email:", err);
-        res.status(500).json({ error: "Failed to fetch email" });
+        console.error(err);
+        res.status(500).json({ error: 'Failed to fetch user info' });
     }
 });
 

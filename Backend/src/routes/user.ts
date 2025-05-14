@@ -4,6 +4,7 @@ import authMiddleware from "../middleware.js";
 import zod from "zod";
 import jwt from "jsonwebtoken";
 import express from "express";
+import bcrypt from "bcrypt";
 
 const router = express.Router();
 const client = new PrismaClient();
@@ -38,6 +39,10 @@ router.post('/signup', async (req: any, res: any) => {
         })
         return;
     }
+
+    // Hash the password before saving it to the database
+    const hashedPassword = await bcrypt.hash(userDetails.password, 10);
+    userDetails.password = hashedPassword;
 
     const user = await client.user.create({
         data: {
@@ -77,20 +82,21 @@ router.post('/signin', async (req: any, res: any) => {
         })
         return;
     }
-    const existingUser = await client.user.findUnique({
+    const existingUserName = await client.user.findUnique({
         where: {
-            username: userDetails.username,
-            password: userDetails.password
+            username: userDetails.username
         }
     })
-    if (!existingUser) {
+    if (!existingUserName) {
         res.status(400).json({
             message: 'User does not exist'
         })
         return;
     }
-
-    if (existingUser.password !== userDetails.password) {
+    
+    // Compare the hashed password with the provided password
+    const isPasswordValid = await bcrypt.compare(userDetails.password, existingUserName.password);
+    if (!isPasswordValid) {
         res.status(400).json({
             message: 'Invalid password'
         })
@@ -98,7 +104,7 @@ router.post('/signin', async (req: any, res: any) => {
     }
 
     const JWT_SECRET = process.env.JWT_SECRET;
-    const userId = existingUser.id;
+    const userId = existingUserName.id;
 
     const token = jwt.sign({ userId }, JWT_SECRET || "");
 

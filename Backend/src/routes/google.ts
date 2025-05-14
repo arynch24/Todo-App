@@ -16,8 +16,11 @@ router.get('/auth', (req: any, res: any) => {
 
     const authUrl = oauth2Client.generateAuthUrl({
         access_type: 'offline',
-        scope: ['https://www.googleapis.com/auth/calendar',
-            'https://www.googleapis.com/auth/userinfo.email'],
+        scope: [
+            'https://www.googleapis.com/auth/calendar',
+            'https://www.googleapis.com/auth/userinfo.email',
+            'https://www.googleapis.com/auth/userinfo.profile'
+        ],
         prompt: 'consent'
     });
 
@@ -145,8 +148,7 @@ router.get('/check', authMiddleware, googleAuthMiddleware, async (req: any, res:
 
     try {
         const userInfo = await oauth2.userinfo.get();
-        const email = userInfo.data.email;
-        res.status(200).json({ email });
+        res.status(200).json(userInfo.data);
     } catch (err) {
         console.error("Error fetching email:", err);
         res.status(500).json({ error: "Failed to fetch email" });

@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import LoadingContext from '../Context/LoadingContext';
 import LoginLoader from './LoginLoader';
+import { useAuth } from '../Context/AuthContext';
 
 const SignUp = () => {
 
@@ -13,6 +14,7 @@ const SignUp = () => {
     const [userExist, setUserExist] = useState("");
     const navigate = useNavigate();
     const { loading, setLoading } = useContext(LoadingContext);
+    const { setIsVerified } = useAuth();
 
     const handleSignUpButton = async () => {
         if (!username || !firstName || !lastName || !password) {
@@ -34,6 +36,7 @@ const SignUp = () => {
             console.log(res.data);
 
             if (res.status === 200) {
+                setIsVerified(true);
                 navigate("/dashboard", { replace: true });
                 setUserExist("");
             }

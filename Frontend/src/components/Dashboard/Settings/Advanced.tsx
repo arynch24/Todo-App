@@ -1,14 +1,18 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../../Context/AuthContext";
 
 
 const Advanced = () => {
     const navigate = useNavigate();
+    const {setIsVerified} = useAuth();
+
     const logout = async () => {
         try {
             await axios.get("https://routine-jf3l.onrender.com/api/user/signout", {
                 withCredentials: true,
             });
+            setIsVerified(false);
             navigate("/");
         } catch (err) {
             console.error(err);

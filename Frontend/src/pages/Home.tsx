@@ -3,25 +3,16 @@ import axios from "axios";
 import { ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { icons, cards, yCompany, logoIcon, calendarIcon, timerIcon } from "../utils/homepage.js";
+import { useAuth } from "../Context/AuthContext.js";
 
 const Home = () => {
 
     const navigate = useNavigate()
     const [hoveredCard, setHoveredCard] = useState(1);
+    const { isVerified } = useAuth();
 
-    const checkToken = async () => {
-        try {
-            const res = await axios.get("https://routine-jf3l.onrender.com/api/user/verify", {
-                withCredentials: true,
-            });
-
-            if (res.status === 200) {
-                navigate("/dashboard");
-            }
-        }
-        catch (err) {
-            navigate("/signin");
-        }
+    const checkToken = () => {
+        isVerified ? navigate('/dashboard') : navigate('/signin');
     };
 
     return (

@@ -11,7 +11,7 @@ const client = new PrismaClient();
 router.use(express.json());
 
 const userSchema = zod.object({
-    username: zod.string(),
+    username: zod.string().email(),
     password: zod.string(),
     firstName: zod.string(),
     lastName: zod.string()
@@ -22,7 +22,7 @@ router.post('/signup', async (req: any, res: any) => {
     const { success, error } = userSchema.safeParse(userDetails);
     if (error) {
         res.status(401).json({
-            message: 'Invalid user details',
+            message: 'Invalid Email',
             error: error.errors
         })
         return;
@@ -67,12 +67,12 @@ router.post('/signup', async (req: any, res: any) => {
 router.post('/signin', async (req: any, res: any) => {
     const userDetails = req.body
     const { success, error } = zod.object({
-        username: zod.string(),
+        username: zod.string().email(),
         password: zod.string()
     }).safeParse(userDetails);
     if (error) {
         res.status(400).json({
-            message: 'Invalid user details',
+            message: 'Invalid Email or Password',
             error: error.errors
         })
         return;

@@ -5,6 +5,9 @@ import interactionPlugin from "@fullcalendar/interaction";
 import { useEffect, useState } from "react";
 import { PanelRightOpen } from 'lucide-react';
 import axios from "axios";
+import { useGoogleAuth } from "../../Context/GoogleAuthContext";
+import googleCalendar from "../../assets/google-calendar.png"
+import { Calendar, Lock } from 'lucide-react';
 
 export default function CalendarComponent() {
   type EventType = {
@@ -23,6 +26,7 @@ export default function CalendarComponent() {
   const [description, setDescription] = useState<string>("");
   const [selectedSlot, setSelectedSlot] = useState<{ startStr: string; endStr: string } | null>(null);
   const [editEventId, setEditEventId] = useState<string | null>(null);
+  const { isGoogleVerified } = useGoogleAuth();
 
   //Fetching Events from the backend
   const fetchEvents = async () => {
@@ -215,6 +219,62 @@ export default function CalendarComponent() {
       console.error("Error deleting event:", err);
     }
   };
+
+  const [isHovering, setIsHovering] = useState(false);
+
+  if (!isGoogleVerified) {
+    return (
+      <div className="h-full flex flex-col items-center pt-28 shadow-lg  p-8">
+        <div className="relative mb-8">
+          <div className="absolute -top-2 -right-2">
+            <div className="bg-zinc-800 p-2 rounded-full shadow-md">
+              <Lock size={16} className="text-white" />
+            </div>
+          </div>
+          <div className="bg-coral p-4 rounded-full shadow-md">
+            <Calendar size={32} className="text-white" />
+          </div>
+        </div>
+        
+        <h2 className="text-xl md:text-2xl font-bold text-zinc-700 mb-3">
+          Connect Your Google Calendar
+        </h2>
+        
+        <p className="text-zinc-600 mb-6 max-w-md text-center">
+          Sync your events, create new appointments, and manage your schedule all in one place.
+        </p>
+        
+        <button
+          className={`flex items-center gap-3 ${
+            isHovering 
+              ? "bg-white text-coral border-coral" 
+              : "bg-white text-zinc-700 border-zinc-200"
+          } border px-6 py-3 rounded-lg shadow-sm transition-all duration-300 hover:shadow-md`}
+          onMouseEnter={() => setIsHovering(true)}
+          onMouseLeave={() => setIsHovering(false)}
+          onClick={() => {
+            window.location.href = 'https://routine-jf3l.onrender.com/api/google/auth';
+          }}
+        >
+          <div className={`p-2 rounded-full ${isHovering ? "bg-orange-100" : "bg-zinc-50"} transition-colors duration-300`}>
+            <img
+              src={googleCalendar}
+              alt="Google"
+              className="w-5 h-5"
+            />
+          </div>
+          <span className={`font-medium ${isHovering ? "text-coral" : "text-zinc-700"} transition-colors duration-300`}>
+            Connect with Google
+          </span>
+        </button>
+        
+        <p className="text-zinc-400 text-xs mt-6 max-w-sm text-center">
+          We'll only access the information needed to sync your calendar
+        </p>
+      </div>
+    );
+  }
+  
 
   return (
     <div className="h-full w-full flex ">

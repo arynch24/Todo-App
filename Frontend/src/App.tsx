@@ -14,6 +14,7 @@ import Settings from "./components/Dashboard/Settings"
 import Accounts from "./components/Dashboard/Settings/Accounts"
 import Preferences from "./components/Dashboard/Settings/Preferences"
 import Advanced from "./components/Dashboard/Settings/Advanced"
+import { GoogleAuthProvider } from "./Context/GoogleAuthContext"
 
 function App() {
 
@@ -29,7 +30,9 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/dashboard" element={
             <ProtectedRoute>
-              <Dashboard />
+              <GoogleAuthProvider>
+                <Dashboard />
+              </GoogleAuthProvider>
             </ProtectedRoute>
           }>
             {/* This is the main dashboard route */}

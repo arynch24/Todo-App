@@ -9,7 +9,7 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <LoadingProvider>
       <AuthProvider>
-        <App />
+          <App />
       </AuthProvider>
     </LoadingProvider>
   </StrictMode>

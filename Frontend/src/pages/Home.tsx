@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom"
-import axios from "axios";
 import { ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { icons, cards, yCompany, logoIcon, calendarIcon, timerIcon } from "../utils/homepage.js";

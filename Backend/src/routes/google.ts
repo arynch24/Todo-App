@@ -16,7 +16,8 @@ router.get('/auth', (req: any, res: any) => {
 
     const authUrl = oauth2Client.generateAuthUrl({
         access_type: 'offline',
-        scope: ['https://www.googleapis.com/auth/calendar'],
+        scope: ['https://www.googleapis.com/auth/calendar',
+            'https://www.googleapis.com/auth/userinfo.email'],
         prompt: 'consent'
     });
 
@@ -136,15 +137,15 @@ router.delete('/events/:id', authMiddleware, googleAuthMiddleware, async (req: a
 router.get('/check', authMiddleware, googleAuthMiddleware, async (req: any, res: any) => {
     const oauth2Client = req.oauth2Client;
 
-    if(!oauth2Client) {
+    if (!oauth2Client) {
         return res.status(401).json({ error: "No Refresh Token" });
     }
 
-    const gmail = google.gmail({ version: 'v1', auth: oauth2Client });
+    const oauth2 = google.oauth2({ auth: oauth2Client, version: 'v2' });
 
     try {
-        const profile = await gmail.users.getProfile({ userId: "me" });
-        const email = profile.data.emailAddress;
+        const userInfo = await oauth2.userinfo.get();
+        const email = userInfo.data.email;
         res.status(200).json({ email });
     } catch (err) {
         console.error("Error fetching email:", err);

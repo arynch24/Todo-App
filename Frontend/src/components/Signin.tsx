@@ -8,7 +8,7 @@ const SignIn = () => {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const {loading, setLoading } = useContext(LoadingContext);
+    const { loading, setLoading } = useContext(LoadingContext);
     const [checkCredetials, setCheckCredentials] = useState("");
     const navigate = useNavigate();
 
@@ -24,18 +24,20 @@ const SignIn = () => {
                 username,
                 password
             }, {
-                withCredentials: true, // 👈 REQUIRED for cookies to be sent!
+                withCredentials: true,
             });
 
             console.log(res.data);
 
-            if (res.status === 200) {
-                navigate("/dashboard", { replace: true });
-                setCheckCredentials("");
+            navigate("/dashboard", { replace: true });
+            setCheckCredentials("");
+
+        } catch (err: any) {
+            if (err.response && err.response.data) {
+                setCheckCredentials(err.response.data.message || "Something went wrong.");
+            } else {
+                console.error("An error occurred:", err);
             }
-        } catch (err) {
-            console.error(err);
-            setCheckCredentials("Email or password is incorrect!");
         }
         finally {
             setLoading(false);

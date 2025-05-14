@@ -28,19 +28,22 @@ const SignUp = () => {
                 lastName,
                 password
             }, {
-                withCredentials: true, // 👈 REQUIRED for cookies to be sent!
+                withCredentials: true,
             });
 
             console.log(res.data);
 
             if (res.status === 200) {
-                navigate("/dashboard");
+                navigate("/dashboard", { replace: true });
                 setUserExist("");
             }
 
         } catch (err: any) {
-            console.error(err);
-            setUserExist("User already exists!");
+            if (err.response && err.response.data) {
+                setUserExist(err.response.data.message || "Something went wrong.");
+            } else {
+                console.error("An error occurred:", err);
+            }
         }
         finally {
             setLoading(false);

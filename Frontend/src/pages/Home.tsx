@@ -16,7 +16,7 @@ const Home = () => {
             });
 
             if (res.status === 200) {
-                navigate("/dashboard/agenda");
+                navigate("/dashboard");
             }
         }
         catch (err) {

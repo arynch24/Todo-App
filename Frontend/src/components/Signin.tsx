@@ -30,7 +30,7 @@ const SignIn = () => {
             console.log(res.data);
 
             if (res.status === 200) {
-                navigate("/dashboard/agenda", { replace: true });
+                navigate("/dashboard", { replace: true });
                 setCheckCredentials("");
             }
         } catch (err) {

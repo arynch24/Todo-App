@@ -36,7 +36,7 @@ const NavBar = () => {
       <div className={`${location.pathname==='/'? "block" : "hidden"}`}>
             <button
               className="text-coral bg-[#FBEFEE] text-sm font-semibold mr-2 px-4 py-2 rounded-md cursor-pointer hover:bg-[#fddddd] transition-colors"
-              onClick={() => isVerified ? navigate('/dashboard/agenda') : navigate('/signin')}
+              onClick={() => isVerified ? navigate('/dashboard') : navigate('/signin')}
             >
               Get Started
             </button>

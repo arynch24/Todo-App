@@ -33,7 +33,7 @@ function App() {
             </ProtectedRoute>
           }>
             {/* This is the main dashboard route */}
-            <Route path="agenda" element={<Agenda />} />
+            <Route path="" element={<Agenda />} />
             <Route path="calendar" element={<Calendar />} />
             <Route path="search" element={<Search />} />
 

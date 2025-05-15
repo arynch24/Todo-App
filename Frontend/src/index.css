@@ -89,7 +89,7 @@ body{
 }
 
 .fc-timegrid-slot {
-  height: 20px !important;
+  height: 2px !important;
 }
 
 .fc-timegrid-slot-minor {
@@ -227,5 +227,9 @@ body{
 }
 
 .fc-timegrid-cols {
-  border-right: 1px solid #0041c3 !important; 
+  border-right: 1px solid #efeff3 !important; 
+}
+
+.fc-scrollgrid{
+  border-left:none !important;
 }

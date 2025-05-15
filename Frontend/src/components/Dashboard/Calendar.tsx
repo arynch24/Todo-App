@@ -372,7 +372,7 @@ export default function CalendarComponent() {
             minute: '2-digit',
             hour12: false,
           }}
-          slotDuration={"00:15:00"}
+          slotDuration={"00:30:00"}
           slotLabelInterval={"01:00:00"}
           dayHeaderFormat={{ weekday: 'short', day: '2-digit', omitCommas: true }}
           titleFormat={{

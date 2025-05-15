@@ -57,7 +57,7 @@ const Accounts = () => {
                         }
                     </div>
                     <div className="flex flex-col gap-3 mt-10 w-full">
-                    <h1 className="text-xl font-semibold text-zinc-700 mb-1">Router Account</h1>
+                    <h1 className="text-xl font-semibold text-zinc-700 mb-1">Routine Account</h1>
                         <div className="flex items-center gap-4 border px-5 py-3 border-zinc-300 rounded-lg shadow-sm hover:border-zinc-400 transition-all duration-200">
                             <div className="flex items-center justify-center bg-blue-100 p-3 rounded-full">
                                 <User className="h-6 w-6 text-blue-600" />

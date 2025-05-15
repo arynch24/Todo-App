@@ -130,27 +130,6 @@ router.get('/signout', (req: any, res: any) => {
     });
 });
 
-router.get('/info', authMiddleware, async (req: any, res: any) => {
-    const userId = req.userId;
-
-    try {
-        const userInfo = await client.user.findUnique({
-            where: {
-                id: userId
-            }
-        })
-
-        res.status(200).json({
-            userInfo: userInfo,
-            message: "User Info Fetched Successfully"
-        })
-    }
-    catch (error) {
-        console.error("Error fetching todos:", error);
-        res.status(500).json({ message: "Error fetching todos." });
-    }
-})
-
 router.get('/todos', authMiddleware, async (req: any, res: any) => {
     const userId = req.userId;
     let date = req.query.date || "";

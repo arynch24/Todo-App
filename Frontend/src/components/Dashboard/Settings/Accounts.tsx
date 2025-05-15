@@ -1,29 +1,12 @@
 import googleCalendar from '../../../assets/google-calendar.png';
 import { useGoogleAuth } from "../../../Context/GoogleAuthContext";
+import { useAuth } from '../../../Context/AuthContext';
+import {User} from 'lucide-react'
+import { logoIcon } from '../../../utils/homepage';
 
 const Accounts = () => {
-    // const [userInfo, setUserInfo] = useState<any>(null);
-    // const [loading, setLoading] = useState(true);
     const { isGoogleVerified, loading, userInfo } = useGoogleAuth();
-
-    // useEffect(() => {
-    //     const fetchUserInfo = async () => {
-    //         try {
-    //             setLoading(true);
-    //             const response = await axios.get('https://routine-jf3l.onrender.com/api/google/check', {
-    //                 withCredentials: true,
-    //             });
-    //             setUserInfo(response.data);
-
-    //         } catch (error) {
-    //             console.error("Error fetching user info:", error);
-    //         }
-    //         finally {
-    //             setLoading(false);
-    //         }
-    //     };
-    //     fetchUserInfo();
-    // }, []);
+    const { routineUser } = useAuth();
 
     if (loading) {
         return (
@@ -61,7 +44,7 @@ const Accounts = () => {
                                     <img src={googleCalendar} alt="Google" className="w-7 h-7 ml-auto" />
                                 </div>
                                 :
-                                <div className="flex flex-col items-center gap-4 border px-5 py-3 border-zinc-300 rounded-md hover:border-zinc-400">
+                                <div className="flex flex-col items-center gap-4 border px-5 py-3 border-zinc-300 rounded-md hover:border-zinc-400  transition-all duration-200">
                                     <p className="text-zinc-500">
                                         You are not connected to any Google account.
                                     </p>
@@ -72,7 +55,24 @@ const Accounts = () => {
                                     </button>
                                 </div>
                         }
+                    </div>
+                    <div className="flex flex-col gap-3 mt-10 w-full">
+                    <h1 className="text-xl font-semibold text-zinc-700 mb-1">Router Account</h1>
+                        <div className="flex items-center gap-4 border px-5 py-3 border-zinc-300 rounded-lg shadow-sm hover:border-zinc-400 transition-all duration-200">
+                            <div className="flex items-center justify-center bg-blue-100 p-3 rounded-full">
+                                <User className="h-6 w-6 text-blue-600" />
+                            </div>
 
+                            <div className="flex flex-col">
+                                <h2 className="text-lg font-semibold text-zinc-800">{routineUser.firstName + " " + routineUser.lastName}</h2>
+                                <p className="text-sm text-zinc-500">{routineUser.username}</p>
+                            </div>
+                            <img src={logoIcon} alt="Google" className="w-10 h-6 ml-auto" />
+                        </div>
+
+                        <div className="text-xs text-zinc-400 mt-1 px-1">
+                            Click to manage your account settings
+                        </div>
                     </div>
                 </div>
             </div>

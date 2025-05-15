@@ -91,13 +91,17 @@ router.get('/events', authMiddleware, googleAuthMiddleware, async (req: any, res
     const oauth2Client = req.oauth2Client;
     const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
 
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59).toISOString();
+
     try {
         const events = await calendar.events.list({
             calendarId: 'primary',
-            timeMin: new Date().toISOString(),
-            maxResults: 10,
+            timeMin: startOfMonth,
+            timeMax: endOfMonth,
             singleEvents: true,
-            orderBy: 'startTime'
+            orderBy: 'startTime',
         });
         res.json(events.data.items);
     } catch (err: any) {

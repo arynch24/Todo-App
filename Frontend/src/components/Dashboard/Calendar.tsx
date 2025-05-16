@@ -292,6 +292,23 @@ export default function CalendarComponent() {
         <p className="text-zinc-400 text-xs mt-6 max-w-sm text-center">
           We'll only access the information needed to sync your calendar
         </p>
+
+        <p className="text-center mt-6 max-w-xl mx-auto text-red-600 text-sm sm:text-base leading-relaxed">
+          🔒 <strong>Note:</strong> This feature is currently in testing mode.
+          <br />
+          To get access, please send me an email so I can add you as a test user.
+          After that, you’ll be able to connect your Google Calendar.
+          <br className="my-1" />
+          <a
+            href="https://mail.google.com/mail/?view=cm&fs=1&to=arynch24@gmail.com&su=Request%20for%20Access%20to%20Calendar%20Feature&body=Hi%2C%0A%0AI’d%20like%20to%20be%20added%20as%20a%20test%20user%20for%20the%20Routine%20app.%0A%0AMy%20Email:%20youremail@gmail.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block mt-3 border px-3 py-2 border-blue-500 rounded-md text-blue-500 hover:text-blue-800 hover:border-blue-800  font-semibold transition-colors duration-300"
+          >
+             Send Email  -&gt;
+          </a>
+        </p>
+
       </div>
     );
   }

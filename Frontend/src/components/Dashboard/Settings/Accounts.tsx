@@ -70,9 +70,9 @@ const Accounts = () => {
                             <img src={logoIcon} alt="Google" className="w-10 h-5 ml-auto" />
                         </div>
 
-                        <div className="text-xs text-zinc-400 mt-1 px-1">
+                        {/* <div className="text-xs text-zinc-400 mt-1 px-1">
                             Click to manage your account settings
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>

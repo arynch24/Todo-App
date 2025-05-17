@@ -13,7 +13,7 @@ export const icons = [
     {
         id: 3,
         name: "Linux",
-        icon: "https://routine.co/_nuxt/linux.Czw9SzfY.svg"
+        icon: "https://images.ctfassets.net/fcmhu5qfg1dk/7yeZXjfkNBwRp6f5OXTc8W/b410da3fa0d778c72bf187d7006c5cf3/linux.svg"
     },
     {
         id: 4,
@@ -28,7 +28,7 @@ export const icons = [
     {
         id: 6,
         name: "Web",
-        icon: "https://routine.co/_nuxt/web.CAbfALks.svg"
+        icon: "https://images.ctfassets.net/fcmhu5qfg1dk/1HEGFvKLyOPt0FJ7pu0H1v/c3d2ba0b989fa4ca5c972c15a3033d18/web.svg"
     }
 ]
 

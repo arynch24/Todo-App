@@ -11,7 +11,7 @@ const NavBar = () => {
     <div className="w-full h-16 flex justify-between items-center border-b-[0.5px] border-gray-300 px-6 sm:px-28">
       <div className="cursor-pointer">
         <img
-          src="https://routine.co/_nuxt/logo.qmXltfCZ.svg"
+          src="https://images.ctfassets.net/fcmhu5qfg1dk/3idHhTKNaI1IMTS7ASorZ5/8e472870d2252c29403fb44d414711d7/logo.svg"
           className="h-28 w-32"
           onClick={() => navigate('/')}
         />

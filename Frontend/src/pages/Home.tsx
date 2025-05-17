@@ -75,7 +75,7 @@ const Home = () => {
                                     <a href="#planner" className="text-cyan-600 text-md font-semibold flex items-center gap-1">Learn more<ArrowRight size={16} strokeWidth={3} /></a>
                                 </div>
                                 <div>
-                                    <img src="https://routine.co/_nuxt/bg-planner.B2iTEbqg.webp" />
+                                    <img src="https://images.ctfassets.net/fcmhu5qfg1dk/7Bom3xMZHSCafPTruX46Gg/376a6ccec6f94be97500ff5ae64a40f0/bg-planner.webp" />
                                 </div>
                             </div>
                         </div>
@@ -92,7 +92,7 @@ const Home = () => {
                                     <a href="#planner" className="text-cyan-600 text-md font-semibold flex items-center gap-1">Learn more<ArrowRight size={16} strokeWidth={3} /></a>
                                 </div>
                                 <div>
-                                    <img src="https://routine.co/_nuxt/bg-planner.B2iTEbqg.webp" />
+                                    <img src="https://images.ctfassets.net/fcmhu5qfg1dk/77tmlsUdgjfdSgc3dsdU2T/55f64e42964aca683709684889cabbd0/bg-time-blocking.webp" />
                                 </div>
                             </div>
                         </div>
@@ -109,7 +109,7 @@ const Home = () => {
                                     <a href="#planner" className="text-cyan-600 text-md font-semibold flex items-center gap-1">Learn more<ArrowRight size={16} strokeWidth={3} /></a>
                                 </div>
                                 <div>
-                                    <img src="https://routine.co/_nuxt/bg-agenda.BTfWj8tt.webp" />
+                                    <img src="https://images.ctfassets.net/fcmhu5qfg1dk/4twgZ77oNEx6QICSligmrR/2a73af6de029266250d3730b5abc3e60/bg-agenda.webp" />
                                 </div>
                             </div>
                         </div>
